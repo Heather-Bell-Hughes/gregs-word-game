@@ -51,6 +51,9 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     const boxIndex = selectedBoxIndexRef.current
     const word = wordsRef.current[wordSize]
 
+    // DEBUG
+    setDebug(`L:${letter} WS:${wordSize} BI:${boxIndex} WL:${word.length}`)
+
     // If a specific box is selected, replace letter at that position
     if (boxIndex !== null && boxIndex < wordSize) {
       const oldLetter = word[boxIndex]
@@ -92,10 +95,14 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   }, [])
 
   const handleBoxClick = (size, index) => {
-    selectedWordSizeRef.current = size
-    selectedBoxIndexRef.current = index
-    setSelectedWordSize(size)
-    setSelectedBoxIndex(index)
+    const word = words[size]
+    // Only allow selecting up to the next unfilled position
+    if (index <= word.length) {
+      selectedWordSizeRef.current = size
+      selectedBoxIndexRef.current = index
+      setSelectedWordSize(size)
+      setSelectedBoxIndex(index)
+    }
   }
 
   const handleWordBoxSelect = (size) => {
@@ -148,6 +155,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     }
   }, [words, selectedWordSize])
 
+  // Keyboard handler that always uses current state
   useEffect(() => {
     const handleKeyDown = (e) => {
       const letter = e.key.toUpperCase()
@@ -155,18 +163,82 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       // Check if it's a letter key
       if (/^[A-Z]$/.test(letter)) {
         e.preventDefault()
-        handleLetterClick(letter)
+
+        // Use current state directly, not from closure
+        if (usedLetters.has(letter)) return
+
+        const word = words[selectedWordSize]
+        const boxIndex = selectedBoxIndex
+
+        // If a specific box is selected, replace letter at that position
+        if (boxIndex !== null && boxIndex < selectedWordSize) {
+          const oldLetter = word[boxIndex]
+          const newWord = word.slice(0, boxIndex) + letter + word.slice(boxIndex + 1)
+
+          setWords(prev => ({
+            ...prev,
+            [selectedWordSize]: newWord
+          }))
+
+          setUsedLetters(prev => {
+            const next = new Set(prev)
+            if (oldLetter) next.delete(oldLetter)
+            next.add(letter)
+            return next
+          })
+
+          const nextIndex = boxIndex + 1
+          if (nextIndex < selectedWordSize) {
+            setSelectedBoxIndex(nextIndex)
+          }
+        } else if (word.length < selectedWordSize) {
+          setWords(prev => ({
+            ...prev,
+            [selectedWordSize]: word + letter
+          }))
+          setUsedLetters(prev => new Set([...prev, letter]))
+        }
+
+        setLetterMarking(prev => ({
+          ...prev,
+          [selectedWordSize]: []
+        }))
       }
       // Handle Backspace to delete
       else if (e.key === 'Backspace') {
         e.preventDefault()
-        handleDeleteLetter()
+
+        const word = words[selectedWordSize]
+        if (word.length > 0) {
+          const lastLetter = word[word.length - 1]
+          setUsedLetters(prevLetters => {
+            const next = new Set(prevLetters)
+            next.delete(lastLetter)
+            return next
+          })
+          setWords(prev => ({
+            ...prev,
+            [selectedWordSize]: word.slice(0, -1)
+          }))
+        }
+
+        // Move selection backwards
+        if (selectedBoxIndex !== null && selectedBoxIndex > 0) {
+          setSelectedBoxIndex(selectedBoxIndex - 1)
+        } else if (selectedBoxIndex === 0) {
+          setSelectedBoxIndex(null)
+        }
+
+        setLetterMarking(prev => ({
+          ...prev,
+          [selectedWordSize]: []
+        }))
       }
     }
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [handleLetterClick, handleDeleteLetter])
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [selectedWordSize, selectedBoxIndex, words, usedLetters])
 
   const checkWords = () => {
     const expected = {
