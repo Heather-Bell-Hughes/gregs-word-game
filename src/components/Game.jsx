@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const KEYBOARD_LAYOUT = [
   ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -56,6 +56,41 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   const handleWordBoxSelect = (size) => {
     setSelectedWordSize(size)
   }
+
+  const handleDeleteLetter = () => {
+    if (words[selectedWordSize].length > 0) {
+      const lastLetter = words[selectedWordSize][words[selectedWordSize].length - 1]
+      setWords(prev => ({
+        ...prev,
+        [selectedWordSize]: prev[selectedWordSize].slice(0, -1)
+      }))
+      setUsedLetters(prev => {
+        const next = new Set(prev)
+        next.delete(lastLetter)
+        return next
+      })
+    }
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const letter = e.key.toUpperCase()
+
+      // Check if it's a letter key
+      if (/^[A-Z]$/.test(letter)) {
+        e.preventDefault()
+        handleLetterClick(letter)
+      }
+      // Handle Backspace to delete
+      else if (e.key === 'Backspace') {
+        e.preventDefault()
+        handleDeleteLetter()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedWordSize, usedLetters, words])
 
   const checkWords = () => {
     const expected = {
@@ -207,6 +242,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
       <div className="buttons-row">
         <button className="btn" onClick={resetPuzzle}>Clear</button>
+        <button className="btn" onClick={handleDeleteLetter}>Delete</button>
         <button className="btn reveal" onClick={revealAnswer}>Reveal</button>
         <button className="btn" onClick={checkWords}>Check</button>
       </div>
