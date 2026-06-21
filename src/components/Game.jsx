@@ -391,6 +391,11 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
                     e.stopPropagation()
                     handleBoxClick(size, i)
                   }}
+                  onTouchEnd={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                    handleBoxClick(size, i)
+                  }}
                 >
                   {(words[size][i] && words[size][i] !== '_') ? words[size][i] : ''}
                 </button>
@@ -412,6 +417,10 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
                       key={key}
                       className="keyboard-key delete-key"
                       onClick={handleDeleteLetter}
+                      onTouchEnd={(e) => {
+                        e.preventDefault()
+                        handleDeleteLetter()
+                      }}
                     >
                       ⌫
                     </button>
@@ -422,6 +431,10 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
                     key={key}
                     className={`keyboard-key ${disabledLetters.has(key) ? 'used' : ''}`}
                     onClick={() => handleLetterClick(key)}
+                    onTouchEnd={(e) => {
+                      e.preventDefault()
+                      handleLetterClick(key)
+                    }}
                   >
                     {key}
                   </button>
