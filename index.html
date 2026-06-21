@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greg's Word Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .level-title {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .menu-btn {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .menu-btn:hover {
+            background: #444;
+        }
+
+        .puzzle-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .six-letter-display {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .letter-box {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #555;
+            background: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+        }
+
+        .word-boxes-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .word-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        #word5Row {
+            margin-left: 0;
+        }
+
+        #word4Row {
+            margin-left: 30px;
+        }
+
+        #word3Row {
+            margin-left: 60px;
+        }
+
+        #word2Row {
+            margin-left: 90px;
+        }
+
+        #word1Row {
+            margin-left: 120px;
+        }
+
+        .word-box {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #555;
+            background: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .word-box.filled {
+            border-color: #777;
+        }
+
+        .word-box.empty {
+            border: 2px dashed #444;
+            cursor: default;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 10px 30px;
+            border: 1px solid #555;
+            background: #333;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #444;
+        }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .key {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.2s;
+            text-align: center;
+            user-select: none;
+        }
+
+        .key:hover:not(.used) {
+            background: #444;
+        }
+
+        .key.used {
+            background: #555;
+            color: #888;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .key:nth-child(8) {
+            grid-column: 2 / span 1;
+        }
+
+        .key:nth-child(13) {
+            grid-column: 1 / span 1;
+        }
+
+        .key:nth-child(19) {
+            grid-column: 2 / span 1;
+        }
+
+        .success-message {
+            display: none;
+            padding: 15px;
+            background: #4caf50;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .letter-box {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .word-box {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .keyboard {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 6px;
+            }
+
+            .key {
+                padding: 10px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="successMessage" class="success-message">✓ Perfect! Level Complete!</div>
+
+        <div class="header">
+            <div class="level-title">Level <span id="levelNumber">1</span></div>
+        </div>
+
+        <div class="puzzle-area">
+            <div class="six-letter-display" id="sixLetterDisplay"></div>
+
+            <div class="word-boxes-container">
+                <div class="word-row" id="word5Row"></div>
+                <div class="word-row" id="word4Row"></div>
+                <div class="word-row" id="word3Row"></div>
+                <div class="word-row" id="word2Row"></div>
+                <div class="word-row" id="word1Row"></div>
+            </div>
+        </div>
+
+        <div class="buttons-row">
+            <button class="btn" onclick="clearCurrentWord()">Clear</button>
+            <button class="btn" onclick="revealAnswer()" style="color: #ffc107;">Reveal</button>
+            <button class="btn" onclick="resetPuzzle()">Reset</button>
+        </div>
+
+        <div class="keyboard" id="keyboard"></div>
+    </div>
+
+    <script src="valid-words.js"></script>
+    <script>
+        const puzzles = [
+            { sixLetter: "GLITCH", fiveLetters: "CROWN", fourLetters: "BUMP", threeLetters: "SKY", twoLetters: "EX", oneLetter: "A" },
+            { sixLetter: "BRUNCH", fiveLetters: "JOWLS", fourLetters: "DAFT", threeLetters: "PEG", twoLetters: "MY", oneLetter: "L" },
+            { sixLetter: "PLUMBS", fiveLetters: "DRAFT", fourLetters: "NECK", threeLetters: "WHY", twoLetters: "OX", oneLetter: "I" },
+            { sixLetter: "NYMPHS", fiveLetters: "BRICK", fourLetters: "FOLD", threeLetters: "JUG", twoLetters: "WE", oneLetter: "S" },
+            { sixLetter: "SHMUCK", fiveLetters: "WALTZ", fourLetters: "BEND", threeLetters: "PRY", twoLetters: "OF", oneLetter: "L" },
+            { sixLetter: "SPHINX", fiveLetters: "MUNCH", fourLetters: "FLAW", threeLetters: "COB", twoLetters: "BY", oneLetter: "S" },
+            { sixLetter: "THINGS", fiveLetters: "CROWD", fourLetters: "JAMB", threeLetters: "PEW", twoLetters: "UX", oneLetter: "Y" },
+            { sixLetter: "WRENCH", fiveLetters: "SIGHT", fourLetters: "FLOP", threeLetters: "BUM", twoLetters: "AY", oneLetter: "K" },
+            { sixLetter: "BRANCH", fiveLetters: "SWEPT", fourLetters: "FLUX", threeLetters: "DOG", twoLetters: "MY", oneLetter: "I" },
+            { sixLetter: "SCRAWL", fiveLetters: "DEPTH", fourLetters: "NOUN", threeLetters: "GYM", twoLetters: "BY", oneLetter: "K" },
+            { sixLetter: "DROWNS", fiveLetters: "MATCH", fourLetters: "FLUB", threeLetters: "YEW", twoLetters: "IS", oneLetter: "P" },
+            { sixLetter: "SWITCH", fiveLetters: "REALM", fourLetters: "UPON", threeLetters: "FOB", twoLetters: "GY", oneLetter: "X" },
+            { sixLetter: "SKETCH", fiveLetters: "BLIMP", fourLetters: "FUND", threeLetters: "WYE", twoLetters: "GO", oneLetter: "A" },
+            { sixLetter: "THROWN", fiveLetters: "DUMBS", fourLetters: "JACK", threeLetters: "FEW", twoLetters: "BY", oneLetter: "P" },
+            { sixLetter: "STRAND", fiveLetters: "CHOMP", fourLetters: "FLUX", threeLetters: "BIG", twoLetters: "WY", oneLetter: "A" },
+            { sixLetter: "CRYPTS", fiveLetters: "FLING", fourLetters: "DUMB", threeLetters: "HOW", twoLetters: "EX", oneLetter: "A" },
+            { sixLetter: "STRING", fiveLetters: "PLUCK", fourLetters: "WHOM", threeLetters: "FAD", twoLetters: "BY", oneLetter: "E" },
+            { sixLetter: "SCRIMP", fiveLetters: "FLUNK", fourLetters: "DEBT", threeLetters: "WHY", twoLetters: "GO", oneLetter: "A" },
+            { sixLetter: "GULPHS", fiveLetters: "TOWNS", fourLetters: "BRICK", threeLetters: "FEW", twoLetters: "MY", oneLetter: "A" },
+            { sixLetter: "BLANCH", fiveLetters: "GRUMP", fourLetters: "FLED", threeLetters: "SKY", twoLetters: "OX", oneLetter: "I" }
+        ];
+
+        let currentPuzzleIndex = 0;
+        let currentPuzzle = puzzles[currentPuzzleIndex];
+        let currentWordBoxes = [];
+        let usedLetters = new Set();
+        let allLetters = [];
+        let currentWordSize = 5;
+
+        const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+
+        function initializePuzzle() {
+            currentPuzzle = puzzles[currentPuzzleIndex];
+            usedLetters = new Set();
+            currentWordBoxes = [];
+            currentWordSize = 5;
+
+            document.getElementById('levelNumber').textContent = currentPuzzleIndex + 1;
+            document.getElementById('successMessage').classList.remove('show');
+
+            renderSixLetterWord();
+            renderWordBoxes();
+            renderKeyboard();
+        }
+
+        function getAllLetters(puzzle) {
+            return (puzzle.sixLetter + puzzle.fiveLetters + puzzle.fourLetters +
+                    puzzle.threeLetters + puzzle.twoLetters + puzzle.oneLetter).split('').sort();
+        }
+
+        function getRemainingLetters(puzzle) {
+            const all = getAllLetters(puzzle);
+            const six = puzzle.sixLetter.split('');
+            const remaining = all.filter(letter => !six.includes(letter));
+            return [...new Set(remaining)];
+        }
+
+        function renderSixLetterWord() {
+            const display = document.getElementById('sixLetterDisplay');
+            display.innerHTML = currentPuzzle.sixLetter.split('').map(letter =>
+                `<div class="letter-box">${letter}</div>`
+            ).join('');
+        }
+
+        function renderWordBoxes() {
+            const rows = {
+                5: document.getElementById('word5Row'),
+                4: document.getElementById('word4Row'),
+                3: document.getElementById('word3Row'),
+                2: document.getElementById('word2Row'),
+                1: document.getElementById('word1Row')
+            };
+
+            [5, 4, 3, 2, 1].forEach(size => {
+                rows[size].innerHTML = '';
+                for (let i = 0; i < size; i++) {
+                    const box = document.createElement('div');
+                    box.className = 'word-box empty';
+                    box.id = `word${size}-${i}`;
+                    box.onclick = () => removeLetterFromWord(size, i);
+                    rows[size].appendChild(box);
+                }
+            });
+        }
+
+        function renderKeyboard() {
+            const keyboard = document.getElementById('keyboard');
+            keyboard.innerHTML = '';
+            const remaining = getRemainingLetters(currentPuzzle);
+
+            ALPHABET.forEach(letter => {
+                const key = document.createElement('button');
+                key.className = 'key';
+                key.textContent = letter;
+                key.id = `key-${letter}`;
+
+                if (!remaining.includes(letter)) {
+                    key.classList.add('used');
+                    key.disabled = true;
+                }
+
+                key.onclick = () => addLetterToWord(letter, key);
+                keyboard.appendChild(key);
+            });
+        }
+
+        function addLetterToWord(letter, keyElement) {
+            const boxes = document.querySelectorAll(`#word${currentWordSize}-${currentWordSize - 1}[class*="empty"]`);
+            if (boxes.length === 0) {
+                currentWordSize--;
+                if (currentWordSize < 1) return;
+                const newBoxes = document.querySelectorAll(`#word${currentWordSize} .empty`);
+                if (newBoxes.length === 0) return;
+            }
+
+            const emptyBoxes = Array.from(document.querySelectorAll('.word-box.empty')).filter(box => {
+                const size = box.id.split('-')[0].replace('word', '');
+                return size == currentWordSize;
+            });
+
+            if (emptyBoxes.length > 0) {
+                const box = emptyBoxes[0];
+                box.textContent = letter;
+                box.classList.remove('empty');
+                box.classList.add('filled');
+                usedLetters.add(letter);
+                keyElement.classList.add('used');
+                keyElement.disabled = true;
+
+                // Find next word size
+                const filled = Array.from(document.querySelectorAll(`#word${currentWordSize} .filled`)).length;
+                if (filled === currentWordSize) {
+                    currentWordSize--;
+                    if (currentWordSize >= 1) {
+                        const nextEmpty = document.querySelector(`#word${currentWordSize} .empty`);
+                        if (!nextEmpty) currentWordSize--;
+                    }
+                }
+            }
+        }
+
+        function removeLetterFromWord(size, index) {
+            const box = document.getElementById(`word${size}-${index}`);
+            if (box.classList.contains('empty')) return;
+
+            const letter = box.textContent;
+            box.textContent = '';
+            box.classList.remove('filled');
+            box.classList.add('empty');
+            usedLetters.delete(letter);
+
+            const keyElement = document.getElementById(`key-${letter}`);
+            keyElement.classList.remove('used');
+            keyElement.disabled = false;
+
+            currentWordSize = size;
+        }
+
+        function clearCurrentWord() {
+            const filled = Array.from(document.querySelectorAll('.word-box.filled'));
+            filled.reverse().forEach(box => {
+                const letter = box.textContent;
+                box.textContent = '';
+                box.classList.remove('filled');
+                box.classList.add('empty');
+                usedLetters.delete(letter);
+
+                const keyElement = document.getElementById(`key-${letter}`);
+                keyElement.classList.remove('used');
+                keyElement.disabled = false;
+            });
+            currentWordSize = 5;
+        }
+
+        function getWordsFromBoxes() {
+            const words = {};
+            [5, 4, 3, 2, 1].forEach(size => {
+                let word = '';
+                for (let i = 0; i < size; i++) {
+                    const box = document.getElementById(`word${size}-${i}`);
+                    word += box.textContent;
+                }
+                words[size] = word;
+            });
+            return words;
+        }
+
+        function checkWords() {
+            const words = getWordsFromBoxes();
+
+            if (Object.values(words).some(w => w.length === 0)) {
+                alert('Please fill in all words!');
+                return;
+            }
+
+            const expected = {
+                5: currentPuzzle.fiveLetters,
+                4: currentPuzzle.fourLetters,
+                3: currentPuzzle.threeLetters,
+                2: currentPuzzle.twoLetters,
+                1: currentPuzzle.oneLetter
+            };
+
+            let allCorrect = true;
+            for (let size of [5, 4, 3, 2, 1]) {
+                if (words[size] !== expected[size]) {
+                    allCorrect = false;
+                }
+            }
+
+            if (allCorrect) {
+                document.getElementById('successMessage').classList.add('show');
+                setTimeout(() => {
+                    if (currentPuzzleIndex < puzzles.length - 1) {
+                        currentPuzzleIndex++;
+                        initializePuzzle();
+                    }
+                }, 1500);
+            } else {
+                alert('Some words are incorrect. Try again!');
+            }
+        }
+
+        function revealAnswer() {
+            clearCurrentWord();
+
+            const solutions = [
+                { size: 5, word: currentPuzzle.fiveLetters },
+                { size: 4, word: currentPuzzle.fourLetters },
+                { size: 3, word: currentPuzzle.threeLetters },
+                { size: 2, word: currentPuzzle.twoLetters },
+                { size: 1, word: currentPuzzle.oneLetter }
+            ];
+
+            solutions.forEach(({ size, word }) => {
+                const letters = word.split('');
+                letters.forEach((letter, index) => {
+                    const box = document.getElementById(`word${size}-${index}`);
+                    box.textContent = letter;
+                    box.classList.remove('empty');
+                    box.classList.add('filled');
+                    usedLetters.add(letter);
+                });
+
+                const keyElements = document.querySelectorAll('.key');
+                keyElements.forEach(el => {
+                    if (letters.includes(el.textContent)) {
+                        el.classList.add('used');
+                        el.disabled = true;
+                    }
+                });
+            });
+
+            setTimeout(() => {
+                alert(`Solution revealed!\n\n5-letter: ${currentPuzzle.fiveLetters}\n4-letter: ${currentPuzzle.fourLetters}\n3-letter: ${currentPuzzle.threeLetters}\n2-letter: ${currentPuzzle.twoLetters}\n1-letter: ${currentPuzzle.oneLetter}`);
+                if (currentPuzzleIndex < puzzles.length - 1) {
+                    currentPuzzleIndex++;
+                    initializePuzzle();
+                }
+            }, 300);
+        }
+
+        function resetPuzzle() {
+            renderWordBoxes();
+            renderKeyboard();
+            usedLetters = new Set();
+            currentWordSize = 5;
+        }
+
+        initializePuzzle();
+
+        document.addEventListener('keydown', (e) => {
+            const letter = e.key.toUpperCase();
+            if (/^[A-Z]$/.test(letter)) {
+                const keyElement = document.getElementById(`key-${letter}`);
+                if (keyElement && !keyElement.disabled) {
+                    addLetterToWord(letter, keyElement);
+                }
+            }
+            if (e.key === 'Backspace') {
+                const filled = Array.from(document.querySelectorAll('.word-box.filled'));
+                if (filled.length > 0) {
+                    const last = filled[filled.length - 1];
+                    const id = last.id;
+                    const size = parseInt(id.split('-')[0].replace('word', ''));
+                    const index = parseInt(id.split('-')[1]);
+                    removeLetterFromWord(size, index);
+                }
+            }
+            if (e.key === 'Enter') {
+                checkWords();
+            }
+        });
+    </script>
+</body>
+</html>
