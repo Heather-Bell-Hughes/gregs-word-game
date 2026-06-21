@@ -95,14 +95,10 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   }, [])
 
   const handleBoxClick = (size, index) => {
-    const word = words[size]
-    // Only allow selecting up to the next unfilled position
-    if (index <= word.length) {
-      selectedWordSizeRef.current = size
-      selectedBoxIndexRef.current = index
-      setSelectedWordSize(size)
-      setSelectedBoxIndex(index)
-    }
+    selectedWordSizeRef.current = size
+    selectedBoxIndexRef.current = index
+    setSelectedWordSize(size)
+    setSelectedBoxIndex(index)
   }
 
   const handleWordBoxSelect = (size) => {
@@ -170,10 +166,18 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         const word = words[selectedWordSize]
         const boxIndex = selectedBoxIndex
 
-        // If a specific box is selected, replace letter at that position
+        // If a specific box is selected, replace letter at that position or append if beyond current length
         if (boxIndex !== null && boxIndex < selectedWordSize) {
           const oldLetter = word[boxIndex]
-          const newWord = word.slice(0, boxIndex) + letter + word.slice(boxIndex + 1)
+          let newWord
+
+          if (boxIndex < word.length) {
+            // Replace existing letter at this position
+            newWord = word.slice(0, boxIndex) + letter + word.slice(boxIndex + 1)
+          } else {
+            // Append if selecting at or beyond current word length
+            newWord = word + letter
+          }
 
           setWords(prev => ({
             ...prev,
