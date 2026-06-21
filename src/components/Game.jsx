@@ -154,16 +154,13 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       )}
 
       <div className="puzzle-area">
-        <div className="six-letter-display">
-          <div className="six-letter-label">Given Word</div>
-          <div className="six-letter-word">
+        <div className="word-boxes-container">
+          <div className="word-row six-letter-row">
             {puzzle.sixLetter.split('').map((letter, i) => (
               <div key={i} className="letter-box">{letter}</div>
             ))}
           </div>
-        </div>
 
-        <div className="word-boxes-container">
           {[5, 4, 3, 2, 1].map(size => (
             <div key={size} className="word-row">
               {Array.from({ length: size }).map((_, i) => (

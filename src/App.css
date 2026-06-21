@@ -265,26 +265,6 @@ body {
   margin-bottom: 30px;
 }
 
-.six-letter-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.six-letter-label {
-  color: #999;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: -5px;
-}
-
-.six-letter-word {
-  display: flex;
-  gap: 8px;
-}
-
 .letter-box {
   width: 50px;
   height: 50px;

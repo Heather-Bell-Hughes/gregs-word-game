@@ -43,8 +43,8 @@ async function test() {
     console.log('   ✓ Saved to test-screenshots/2-game-initial.png');
 
     // Check for game elements
-    const givenWord = await page.locator('.six-letter-word').innerText();
-    console.log(`   Given word: ${givenWord}`);
+    const letterBoxes = await page.locator('.six-letter-row .letter-box').count();
+    console.log(`   Given word boxes: ${letterBoxes}`);
 
     const keyboardKeys = await page.locator('.keyboard-key').count();
     console.log(`   Keyboard keys found: ${keyboardKeys}`);
