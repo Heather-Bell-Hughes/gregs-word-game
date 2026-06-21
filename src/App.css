@@ -338,6 +338,10 @@ body {
   background: #ff5252;
 }
 
+.keyboard-spacer {
+  flex: 1;
+}
+
 .word-boxes-container {
   display: flex;
   flex-direction: column;

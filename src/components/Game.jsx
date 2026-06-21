@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 const KEYBOARD_LAYOUT = [
   ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'DEL'],
-  ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+  ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '', 'DEL']
 ]
 
 export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, totalPuzzles }) {
@@ -21,54 +21,79 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   const [showRules, setShowRules] = useState(false)
   const [letterMarking, setLetterMarking] = useState({})
 
+  // Refs for current state values (for immediate access in event handlers)
+  const selectedWordSizeRef = useRef(5)
+  const selectedBoxIndexRef = useRef(null)
+  const wordsRef = useRef({ 5: '', 4: '', 3: '', 2: '', 1: '' })
+  const usedLettersRef = useRef(new Set(puzzle.sixLetter.split('')))
+
+  // Update refs whenever state changes
+  useEffect(() => {
+    selectedWordSizeRef.current = selectedWordSize
+  }, [selectedWordSize])
+
+  useEffect(() => {
+    selectedBoxIndexRef.current = selectedBoxIndex
+  }, [selectedBoxIndex])
+
+  useEffect(() => {
+    wordsRef.current = words
+  }, [words])
+
+  useEffect(() => {
+    usedLettersRef.current = usedLetters
+  }, [usedLetters])
+
   const handleLetterClick = useCallback((letter) => {
-    if (usedLetters.has(letter)) return
+    if (usedLettersRef.current.has(letter)) return
 
-    setWords(prevWords => {
-      const word = prevWords[selectedWordSize]
+    const wordSize = selectedWordSizeRef.current
+    const boxIndex = selectedBoxIndexRef.current
+    const word = wordsRef.current[wordSize]
 
-      // If a specific box is selected, replace letter at that position
-      if (selectedBoxIndex !== null && selectedBoxIndex < selectedWordSize) {
-        const oldLetter = word[selectedBoxIndex]
-        const newWord = word.slice(0, selectedBoxIndex) + letter + word.slice(selectedBoxIndex + 1)
+    // If a specific box is selected, replace letter at that position
+    if (boxIndex !== null && boxIndex < wordSize) {
+      const oldLetter = word[boxIndex]
+      const newWord = word.slice(0, boxIndex) + letter + word.slice(boxIndex + 1)
 
-        // Update used letters
-        setUsedLetters(prevLetters => {
-          const next = new Set(prevLetters)
-          if (oldLetter) next.delete(oldLetter)
-          next.add(letter)
-          return next
-        })
+      // Update used letters
+      setUsedLetters(prevLetters => {
+        const next = new Set(prevLetters)
+        if (oldLetter) next.delete(oldLetter)
+        next.add(letter)
+        return next
+      })
 
-        // Move to next box
-        const nextIndex = selectedBoxIndex + 1
-        if (nextIndex < selectedWordSize) {
-          setSelectedBoxIndex(nextIndex)
-        }
+      // Update word
+      setWords(prev => ({
+        ...prev,
+        [wordSize]: newWord
+      }))
 
-        return {
-          ...prevWords,
-          [selectedWordSize]: newWord
-        }
-      } else if (word.length < selectedWordSize) {
-        // Append to end if no specific box selected
-        setUsedLetters(prevLetters => new Set([...prevLetters, letter]))
-        return {
-          ...prevWords,
-          [selectedWordSize]: word + letter
-        }
+      // Move to next box
+      const nextIndex = boxIndex + 1
+      if (nextIndex < wordSize) {
+        setSelectedBoxIndex(nextIndex)
       }
-      return prevWords
-    })
+    } else if (word.length < wordSize) {
+      // Append to end if no specific box selected
+      setUsedLetters(prevLetters => new Set([...prevLetters, letter]))
+      setWords(prev => ({
+        ...prev,
+        [wordSize]: word + letter
+      }))
+    }
 
     // Clear marking for current word when typing
     setLetterMarking(prev => ({
       ...prev,
-      [selectedWordSize]: []
+      [wordSize]: []
     }))
-  }, [usedLetters, selectedWordSize, selectedBoxIndex])
+  }, [])
 
   const handleBoxClick = (size, index) => {
+    selectedWordSizeRef.current = size
+    selectedBoxIndexRef.current = index
     setSelectedWordSize(size)
     setSelectedBoxIndex(index)
   }
@@ -78,28 +103,37 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   }
 
   const handleDeleteLetter = useCallback(() => {
-    setWords(prev => {
-      const word = prev[selectedWordSize]
-      if (word.length > 0) {
-        const lastLetter = word[word.length - 1]
-        setUsedLetters(prevLetters => {
-          const next = new Set(prevLetters)
-          next.delete(lastLetter)
-          return next
-        })
-        return {
-          ...prev,
-          [selectedWordSize]: word.slice(0, -1)
-        }
-      }
-      return prev
-    })
+    const wordSize = selectedWordSizeRef.current
+    const boxIndex = selectedBoxIndexRef.current
+    const word = wordsRef.current[wordSize]
+
+    if (word.length > 0) {
+      const lastLetter = word[word.length - 1]
+      setUsedLetters(prevLetters => {
+        const next = new Set(prevLetters)
+        next.delete(lastLetter)
+        return next
+      })
+      setWords(prev => ({
+        ...prev,
+        [wordSize]: word.slice(0, -1)
+      }))
+    }
+
+    // Move selection backwards
+    if (boxIndex !== null && boxIndex > 0) {
+      setSelectedBoxIndex(boxIndex - 1)
+    } else if (boxIndex === 0) {
+      // If at position 0, clear the selection
+      setSelectedBoxIndex(null)
+    }
+
     // Clear marking for current word when deleting
     setLetterMarking(prev => ({
       ...prev,
-      [selectedWordSize]: []
+      [wordSize]: []
     }))
-  }, [selectedWordSize])
+  }, [])
 
   // Auto-advance to next word when current word is complete
   useEffect(() => {
@@ -132,7 +166,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedWordSize, selectedBoxIndex, words, usedLetters])
+  }, [handleLetterClick, handleDeleteLetter])
 
   const checkWords = () => {
     const expected = {
@@ -344,7 +378,10 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         <div className="keyboard-container">
           {KEYBOARD_LAYOUT.map((row, rowIndex) => (
             <div key={rowIndex} className="keyboard-row">
-              {row.map(key => {
+              {row.map((key, keyIndex) => {
+                if (key === '') {
+                  return <div key={keyIndex} className="keyboard-spacer"></div>
+                }
                 if (key === 'DEL') {
                   return (
                     <button
