@@ -304,7 +304,7 @@ body {
 .keyboard-key {
   background: #333;
   color: white;
-  border: 1px solid #555;
+  border: 2px solid #555;
   padding: 8px 10px;
   border-radius: 4px;
   cursor: pointer;
@@ -316,15 +316,22 @@ body {
   text-align: center;
 }
 
+.keyboard-key:not(.used) {
+  border-color: #4caf50;
+}
+
 .keyboard-key:hover:not(:disabled) {
   background: #444;
 }
 
 .keyboard-key.used {
-  background: #555;
-  color: #888;
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 2px solid #f44336;
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 1;
+  text-decoration: line-through;
+  font-weight: bold;
 }
 
 .word-boxes-container {
