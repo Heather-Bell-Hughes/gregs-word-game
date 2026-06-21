@@ -18,6 +18,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   const [usedLetters, setUsedLetters] = useState(new Set(puzzle.sixLetter.split('')))
   const [message, setMessage] = useState('')
   const [showRules, setShowRules] = useState(false)
+  const [letterMarking, setLetterMarking] = useState({}) // Track correct/wrong letters
 
   const handleLetterClick = (letter) => {
     if (usedLetters.has(letter)) return
@@ -29,6 +30,11 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         [selectedWordSize]: prev[selectedWordSize] + letter
       }))
       setUsedLetters(prev => new Set([...prev, letter]))
+      // Clear marking for current word when typing new letters
+      setLetterMarking(prev => ({
+        ...prev,
+        [selectedWordSize]: []
+      }))
     }
   }
 
@@ -46,6 +52,11 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
           next.delete(letter)
           return next
         })
+        // Clear marking when deleting
+        setLetterMarking(prev => ({
+          ...prev,
+          [size]: []
+        }))
       }
     } else {
       // If clicking on an empty word box, select it
@@ -69,6 +80,11 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         next.delete(lastLetter)
         return next
       })
+      // Clear marking for current word when deleting
+      setLetterMarking(prev => ({
+        ...prev,
+        [selectedWordSize]: []
+      }))
     }
   }
 
@@ -117,11 +133,26 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     let allComplete = true
     let allCorrectSoFar = true
     let anyWrongLetters = false
+    const marking = {}
 
     // Check ALL required words
     for (const size of [5, 4, 3, 2, 1]) {
       const word = words[size]
       const expectedWord = expected[size]
+      marking[size] = [] // Initialize marking array for this word
+
+      // Only mark complete words (don't mark empty as wrong)
+      if (word.length > 0) {
+        // Check each letter in the word
+        for (let i = 0; i < word.length; i++) {
+          if (word[i] === expectedWord[i]) {
+            marking[size][i] = 'correct'
+          } else {
+            marking[size][i] = 'wrong'
+            anyWrongLetters = true
+          }
+        }
+      }
 
       // Check if word is COMPLETE
       if (word.length !== size) {
@@ -132,11 +163,12 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       if (word.length > 0) {
         const isCorrectPrefix = expectedWord.startsWith(word)
         if (!isCorrectPrefix) {
-          anyWrongLetters = true
           allCorrectSoFar = false
         }
       }
     }
+
+    setLetterMarking(marking)
 
     // Priority of messages:
     if (anyWrongLetters) {
@@ -193,6 +225,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     setWords({ 5: '', 4: '', 3: '', 2: '', 1: '' })
     setUsedLetters(new Set(puzzle.sixLetter.split('')))
     setMessage('')
+    setLetterMarking({})
   }
 
   return (
@@ -247,7 +280,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
               {Array.from({ length: size }).map((_, i) => (
                 <button
                   key={i}
-                  className={`word-box ${words[size][i] ? 'filled' : 'empty'} ${selectedWordSize === size ? 'selected' : ''}`}
+                  className={`word-box ${words[size][i] ? 'filled' : 'empty'} ${selectedWordSize === size ? 'selected' : ''} ${letterMarking[size]?.[i] ? letterMarking[size][i] : ''}`}
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBoxClick(size, i)
