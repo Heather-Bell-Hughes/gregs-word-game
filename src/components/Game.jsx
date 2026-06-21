@@ -72,6 +72,19 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     }
   }
 
+  // Auto-advance to next word when current word is complete
+  useEffect(() => {
+    if (words[selectedWordSize].length === selectedWordSize) {
+      // Word is complete, move to next word
+      const wordOrder = [5, 4, 3, 2, 1]
+      const currentIndex = wordOrder.indexOf(selectedWordSize)
+      if (currentIndex < wordOrder.length - 1) {
+        const nextSize = wordOrder[currentIndex + 1]
+        setSelectedWordSize(nextSize)
+      }
+    }
+  }, [words, selectedWordSize])
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       const letter = e.key.toUpperCase()
