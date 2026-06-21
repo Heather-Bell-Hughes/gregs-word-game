@@ -115,7 +115,8 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     }
 
     let allComplete = true
-    let allCorrect = true
+    let allCorrectSoFar = true
+    let anyWrongLetters = false
 
     // Check ALL required words
     for (const size of [5, 4, 3, 2, 1]) {
@@ -127,16 +128,25 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         allComplete = false
       }
 
-      // If complete, check if correct
-      if (word.length === size && word !== expectedWord) {
-        allCorrect = false
+      // Check if what's entered matches the start of expected word
+      if (word.length > 0) {
+        const isCorrectPrefix = expectedWord.startsWith(word)
+        if (!isCorrectPrefix) {
+          anyWrongLetters = true
+          allCorrectSoFar = false
+        }
       }
     }
 
-    if (!allComplete) {
-      setMessage('✗ All words must be complete!')
+    // Priority of messages:
+    if (anyWrongLetters) {
+      setMessage('✗ Some letters are incorrect. Try again!')
       setTimeout(() => setMessage(''), 3000)
-    } else if (allCorrect) {
+    } else if (!allComplete) {
+      setMessage('✓ Good so far! Fill in the remaining words.')
+      setTimeout(() => setMessage(''), 3000)
+    } else if (allCorrectSoFar) {
+      // All complete AND all correct
       setMessage('✓ Perfect!')
       onSolved()
       setTimeout(() => {
