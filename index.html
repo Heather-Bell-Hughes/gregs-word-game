@@ -236,26 +236,88 @@
         }
 
         @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                margin-bottom: 15px;
+            }
+
+            .level-title {
+                font-size: 24px;
+            }
+
+            .puzzle-area {
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+
             .letter-box {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+                width: 42px;
+                height: 42px;
+                font-size: 18px;
+                gap: 6px;
+            }
+
+            .six-letter-display {
+                gap: 6px;
+            }
+
+            .word-row {
+                gap: 6px;
+                white-space: nowrap;
             }
 
             .word-box {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+                flex-shrink: 0;
+            }
+
+            .word-boxes-container {
+                gap: 12px;
+            }
+
+            #word5Row {
+                margin-left: 0;
+            }
+
+            #word4Row {
+                margin-left: 16px;
+            }
+
+            #word3Row {
+                margin-left: 32px;
+            }
+
+            #word2Row {
+                margin-left: 48px;
+            }
+
+            #word1Row {
+                margin-left: 64px;
+            }
+
+            .buttons-row {
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
             }
 
             .keyboard {
                 grid-template-columns: repeat(6, 1fr);
-                gap: 6px;
+                gap: 5px;
             }
 
             .key {
-                padding: 10px;
-                font-size: 13px;
+                padding: 8px;
+                font-size: 12px;
             }
         }
     </style>
