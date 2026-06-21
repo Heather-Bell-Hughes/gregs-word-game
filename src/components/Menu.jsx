@@ -21,18 +21,18 @@ export default function Menu({ puzzles, stats, onSelectPuzzle, solvedCount, gave
 
       <div className="puzzles-list">
         {puzzles.map((puzzle, index) => {
-          const stat = stats[index]
+          const stat = stats[index] || { status: 'unsolved', solved: false }
           return (
             <button
               key={index}
-              className={`puzzle-item puzzle-${stat.status}`}
+              className={`puzzle-item puzzle-${stat?.status || 'unsolved'}`}
               onClick={() => onSelectPuzzle(index)}
             >
               <span className="puzzle-name">{puzzle.sixLetter}</span>
               <span className="puzzle-status">
-                {stat.solved && '✓'}
-                {stat.status === 'gaveup' && '⊘'}
-                {stat.status === 'unsolved' && '○'}
+                {stat?.solved && '✓'}
+                {stat?.status === 'gaveup' && '⊘'}
+                {stat?.status === 'unsolved' && '○'}
               </span>
             </button>
           )

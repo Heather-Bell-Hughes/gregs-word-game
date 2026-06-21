@@ -114,15 +114,42 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       1: puzzle.oneLetter
     }
 
+    let allComplete = true
     let allCorrect = true
+    let anyWrong = false
+
     for (const size of [5, 4, 3, 2, 1]) {
-      if (words[size] !== expected[size]) {
+      const word = words[size]
+      const expectedWord = expected[size]
+
+      if (word.length === 0) {
+        // Empty word, skip
+        continue
+      }
+
+      // Check if what's entered matches the start of expected word
+      const isCorrectSoFar = expectedWord.startsWith(word)
+
+      if (word.length !== size) {
+        // Incomplete word
+        allComplete = false
+        if (!isCorrectSoFar) {
+          anyWrong = true
+        }
+      } else if (word !== expectedWord) {
+        // Complete but wrong
         allCorrect = false
-        break
+        anyWrong = true
       }
     }
 
-    if (allCorrect) {
+    if (anyWrong) {
+      setMessage('✗ Some letters are incorrect. Try again!')
+      setTimeout(() => setMessage(''), 3000)
+    } else if (!allComplete) {
+      setMessage('⏳ Some words are not complete yet!')
+      setTimeout(() => setMessage(''), 3000)
+    } else if (allCorrect) {
       setMessage('✓ Perfect!')
       onSolved()
       setTimeout(() => {
