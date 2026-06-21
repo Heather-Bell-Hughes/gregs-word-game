@@ -138,10 +138,11 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     }))
   }, [])
 
-  // Auto-advance to next word when current word is complete
+  // Auto-advance to next word when current word is complete (no underscores)
   useEffect(() => {
-    if (words[selectedWordSize].length === selectedWordSize) {
-      // Word is complete, move to next word
+    const word = words[selectedWordSize]
+    if (word.length === selectedWordSize && !word.includes('_')) {
+      // Word is complete and has no placeholders, move to next word
       const wordOrder = [5, 4, 3, 2, 1]
       const currentIndex = wordOrder.indexOf(selectedWordSize)
       if (currentIndex < wordOrder.length - 1) {
