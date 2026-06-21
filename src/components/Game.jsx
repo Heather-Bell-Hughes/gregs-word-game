@@ -203,19 +203,20 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         <div className="rules-modal">
           <div className="rules-content">
             <h2>How to Play</h2>
-            <p><strong>Goal:</strong> Find all 5 words hidden in the given 6-letter word and remaining letters.</p>
+            <p><strong>Goal:</strong> Find one 6, 5, 4, 3, 2, and 1-letter word using each letter exactly once.</p>
             <ul>
-              <li>The <strong>6-letter word</strong> is shown (you don't need to guess it)</li>
-              <li>Use the remaining 20 letters to form:<br />
-                1 five-letter word,<br />
-                1 four-letter word,<br />
-                1 three-letter word,<br />
-                1 two-letter word,<br />
-                1 one-letter word</li>
-              <li>Each letter can only be used <strong>once</strong></li>
-              <li>Use the keyboard to select letters</li>
-              <li>Click on a letter in the word boxes to remove it</li>
-              <li>Press <strong>Check</strong> to verify your answers</li>
+              <li>The <strong>6-letter word is given</strong> at the top</li>
+              <li>Using those 6 letters plus 15 additional letters (21 total), find:</li>
+              <li style={{ marginLeft: '20px' }}>• One 5-letter word</li>
+              <li style={{ marginLeft: '20px' }}>• One 4-letter word</li>
+              <li style={{ marginLeft: '20px' }}>• One 3-letter word</li>
+              <li style={{ marginLeft: '20px' }}>• One 2-letter word</li>
+              <li style={{ marginLeft: '20px' }}>• One 1-letter word</li>
+              <li>Each letter can only be used <strong>once</strong> across all words</li>
+              <li>Click any word box to select it, then type letters</li>
+              <li>Use your keyboard (A-Z) or click letter buttons</li>
+              <li>Press <strong>Delete</strong> or <strong>Backspace</strong> to remove a letter</li>
+              <li>Press <strong>Check</strong> to verify complete words</li>
               <li>Press <strong>Reveal</strong> to see the solution</li>
             </ul>
             <button className="btn" onClick={() => setShowRules(false)}>Close</button>
