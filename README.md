@@ -1,4 +1,4 @@
-# Greg's Word Game 🎮
+# Greg's Word Game 🧩
 
 A fun word puzzle game where you find all the words using limited letters!
 

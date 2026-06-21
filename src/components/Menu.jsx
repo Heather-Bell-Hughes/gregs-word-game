@@ -2,7 +2,7 @@ export default function Menu({ puzzles, stats, onSelectPuzzle, solvedCount, gave
   return (
     <div className="menu-container">
       <div className="menu-header">
-        <h1>🎮 Greg's Word Game</h1>
+        <h1>🧩 Greg's Word Game</h1>
         <div className="stats-bar">
           <div className="stat">
             <span className="stat-label">Solved</span>
