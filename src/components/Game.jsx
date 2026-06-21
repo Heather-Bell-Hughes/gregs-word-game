@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { isValidWord } from '../dictionary'
 
 const KEYBOARD_LAYOUT = [
   ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -161,11 +162,20 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       if (/^[A-Z]$/.test(letter)) {
         e.preventDefault()
 
-        // Use current state directly, not from closure
-        if (usedLetters.has(letter)) return
-
         const word = words[selectedWordSize]
         const boxIndex = selectedBoxIndex
+
+        // If typing the same letter that's already at this position, just move forward
+        if (boxIndex !== null && boxIndex < selectedWordSize && word[boxIndex] === letter) {
+          const nextIndex = boxIndex + 1
+          if (nextIndex < selectedWordSize) {
+            setSelectedBoxIndex(nextIndex)
+          }
+          return
+        }
+
+        // Use current state directly, not from closure
+        if (usedLetters.has(letter)) return
 
         // If a specific box is selected, replace letter at that position
         if (boxIndex !== null && boxIndex < selectedWordSize) {
@@ -240,70 +250,50 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   }, [selectedWordSize, selectedBoxIndex, words, usedLetters])
 
   const checkWords = () => {
-    const expected = {
-      5: puzzle.fiveLetters,
-      4: puzzle.fourLetters,
-      3: puzzle.threeLetters,
-      2: puzzle.twoLetters,
-      1: puzzle.oneLetter
-    }
-
     let allComplete = true
-    let allCorrectSoFar = true
-    let anyWrongLetters = false
+    let allValid = true
     const marking = {}
 
-    // Check ALL required words
+    // Check ALL words
     for (const size of [5, 4, 3, 2, 1]) {
-      const word = words[size]
-      const expectedWord = expected[size]
+      const word = words[size].replace(/_/g, '') // Remove placeholder underscores
       marking[size] = [] // Initialize marking array for this word
 
-      // Only mark complete words (don't mark empty as wrong)
-      if (word.length > 0) {
-        // Check each letter in the word
-        for (let i = 0; i < word.length; i++) {
-          if (word[i] === expectedWord[i]) {
-            marking[size][i] = 'correct'
-          } else {
-            marking[size][i] = 'wrong'
-            anyWrongLetters = true
-          }
-        }
-      }
-
-      // Check if word is COMPLETE
+      // Check if word is COMPLETE (no underscores, correct length)
       if (word.length !== size) {
         allComplete = false
       }
 
-      // Check if what's entered matches the start of expected word
+      // Check if word is valid in dictionary
       if (word.length > 0) {
-        const isCorrectPrefix = expectedWord.startsWith(word)
-        if (!isCorrectPrefix) {
-          allCorrectSoFar = false
+        const valid = isValidWord(word)
+
+        // Mark each letter - green if valid word, red if not
+        for (let i = 0; i < word.length; i++) {
+          marking[size][i] = valid ? 'correct' : 'wrong'
+        }
+
+        if (!valid) {
+          allValid = false
         }
       }
     }
 
     setLetterMarking(marking)
 
-    // Priority of messages:
-    if (anyWrongLetters) {
-      setMessage('✗ Some letters are incorrect. Try again!')
-      setTimeout(() => setMessage(''), 3000)
-    } else if (!allComplete) {
+    // Check results
+    if (!allComplete) {
       setMessage('✓ Good so far! Fill in the remaining words.')
       setTimeout(() => setMessage(''), 3000)
-    } else if (allCorrectSoFar) {
-      // All complete AND all correct
+    } else if (allValid) {
+      // All words complete AND all valid
       setMessage('✓ Perfect!')
       onSolved()
       setTimeout(() => {
         onBack()
       }, 1500)
     } else {
-      setMessage('✗ Some words are incorrect. Try again!')
+      setMessage('✗ Some words are not in the dictionary. Try again!')
       setTimeout(() => setMessage(''), 3000)
     }
   }
