@@ -28,7 +28,10 @@ export default function Menu({ puzzles, stats, onSelectPuzzle, solvedCount, gave
               className={`puzzle-item puzzle-${stat?.status || 'unsolved'}`}
               onClick={() => onSelectPuzzle(index)}
             >
-              <span className="puzzle-name">Puzzle #{index + 1}: {puzzle.sixLetter}</span>
+              <span className="puzzle-name">
+                Puzzle #{index + 1}: {puzzle.sixLetter}
+                {puzzle.difficulty === 'hard' && <span className="hard-badge">⭐ HARD</span>}
+              </span>
               <span className="puzzle-status">
                 {stat?.solved && '✓'}
                 {stat?.status === 'gaveup' && '⊘'}
