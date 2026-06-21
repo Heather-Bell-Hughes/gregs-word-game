@@ -14,6 +14,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     2: '',
     1: ''
   })
+  const [selectedWordSize, setSelectedWordSize] = useState(5) // Track which word box is selected
   const [usedLetters, setUsedLetters] = useState(new Set(puzzle.sixLetter.split('')))
   const [message, setMessage] = useState('')
   const [showRules, setShowRules] = useState(false)
@@ -21,32 +22,39 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   const handleLetterClick = (letter) => {
     if (usedLetters.has(letter)) return
 
-    // Try to add to first incomplete word box (5, 4, 3, 2, 1)
-    for (const size of [5, 4, 3, 2, 1]) {
-      if (words[size].length < size) {
-        setWords(prev => ({
-          ...prev,
-          [size]: prev[size] + letter
-        }))
-        setUsedLetters(prev => new Set([...prev, letter]))
-        return
-      }
+    // Add to selected word box if there's room
+    if (words[selectedWordSize].length < selectedWordSize) {
+      setWords(prev => ({
+        ...prev,
+        [selectedWordSize]: prev[selectedWordSize] + letter
+      }))
+      setUsedLetters(prev => new Set([...prev, letter]))
     }
   }
 
   const handleBoxClick = (size, index) => {
-    if (words[size].length > index) {
-      const letter = words[size][index]
-      setWords(prev => ({
-        ...prev,
-        [size]: prev[size].slice(0, index) + prev[size].slice(index + 1)
-      }))
-      setUsedLetters(prev => {
-        const next = new Set(prev)
-        next.delete(letter)
-        return next
-      })
+    if (words[size].length > 0) {
+      // If clicking on a filled box, remove that letter
+      if (index < words[size].length) {
+        const letter = words[size][index]
+        setWords(prev => ({
+          ...prev,
+          [size]: prev[size].slice(0, index) + prev[size].slice(index + 1)
+        }))
+        setUsedLetters(prev => {
+          const next = new Set(prev)
+          next.delete(letter)
+          return next
+        })
+      }
+    } else {
+      // If clicking on an empty word box, select it
+      setSelectedWordSize(size)
     }
+  }
+
+  const handleWordBoxSelect = (size) => {
+    setSelectedWordSize(size)
   }
 
   const checkWords = () => {
@@ -162,12 +170,15 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
           </div>
 
           {[5, 4, 3, 2, 1].map(size => (
-            <div key={size} className="word-row">
+            <div key={size} className="word-row" onClick={() => handleWordBoxSelect(size)}>
               {Array.from({ length: size }).map((_, i) => (
                 <button
                   key={i}
-                  className={`word-box ${words[size][i] ? 'filled' : 'empty'}`}
-                  onClick={() => handleBoxClick(size, i)}
+                  className={`word-box ${words[size][i] ? 'filled' : 'empty'} ${selectedWordSize === size ? 'selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleBoxClick(size, i)
+                  }}
                 >
                   {words[size][i] || ''}
                 </button>

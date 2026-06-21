@@ -9,13 +9,17 @@ export default function App() {
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0)
   const [stats, setStats] = useState(() => {
     const saved = localStorage.getItem('wordGameStats')
-    if (saved) return JSON.parse(saved)
-    return puzzles.map((_, i) => ({
-      id: i,
-      status: 'unsolved', // 'solved', 'gaveup', 'unsolved'
-      attempts: 0,
-      solved: false
-    }))
+    const savedStats = saved ? JSON.parse(saved) : []
+
+    // Ensure we have an entry for each puzzle
+    return puzzles.map((_, i) =>
+      savedStats[i] || {
+        id: i,
+        status: 'unsolved', // 'solved', 'gaveup', 'unsolved'
+        attempts: 0,
+        solved: false
+      }
+    )
   })
 
   useEffect(() => {

@@ -389,6 +389,11 @@ body {
   border: 2px dashed #444;
 }
 
+.word-box.selected {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.15);
+}
+
 .word-box.filled {
   border-color: #777;
 }
