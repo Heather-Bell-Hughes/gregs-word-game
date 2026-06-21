@@ -16,6 +16,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   })
   const [usedLetters, setUsedLetters] = useState(new Set(puzzle.sixLetter.split('')))
   const [message, setMessage] = useState('')
+  const [showRules, setShowRules] = useState(false)
 
   const handleLetterClick = (letter) => {
     if (usedLetters.has(letter)) return
@@ -124,8 +125,33 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
       <div className="header">
         <button className="back-btn" onClick={onBack}>← Back</button>
-        <div className="puzzle-title">Puzzle {puzzleIndex + 1} / {totalPuzzles}</div>
+        <div className="puzzle-title">{puzzle.sixLetter}</div>
+        <button className="info-btn" onClick={() => setShowRules(!showRules)}>?</button>
       </div>
+
+      {showRules && (
+        <div className="rules-modal">
+          <div className="rules-content">
+            <h2>How to Play</h2>
+            <p><strong>Goal:</strong> Find all 5 words hidden in the given 6-letter word and remaining letters.</p>
+            <ul>
+              <li>The <strong>6-letter word</strong> is shown (you don't need to guess it)</li>
+              <li>Use the remaining 20 letters to form:<br />
+                1 five-letter word,<br />
+                1 four-letter word,<br />
+                1 three-letter word,<br />
+                1 two-letter word,<br />
+                1 one-letter word</li>
+              <li>Each letter can only be used <strong>once</strong></li>
+              <li>Use the keyboard to select letters</li>
+              <li>Click on a letter in the word boxes to remove it</li>
+              <li>Press <strong>Check</strong> to verify your answers</li>
+              <li>Press <strong>Reveal</strong> to see the solution</li>
+            </ul>
+            <button className="btn" onClick={() => setShowRules(false)}>Close</button>
+          </div>
+        </div>
+      )}
 
       <div className="puzzle-area">
         <div className="six-letter-display">
@@ -135,6 +161,22 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
               <div key={i} className="letter-box">{letter}</div>
             ))}
           </div>
+        </div>
+
+        <div className="word-boxes-container">
+          {[5, 4, 3, 2, 1].map(size => (
+            <div key={size} className="word-row">
+              {Array.from({ length: size }).map((_, i) => (
+                <button
+                  key={i}
+                  className={`word-box ${words[size][i] ? 'filled' : 'empty'}`}
+                  onClick={() => handleBoxClick(size, i)}
+                >
+                  {words[size][i] || ''}
+                </button>
+              ))}
+            </div>
+          ))}
         </div>
 
         <div className="keyboard-container">
@@ -148,22 +190,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
                   disabled={usedLetters.has(letter)}
                 >
                   {letter}
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-
-        <div className="word-boxes-container">
-          {[5, 4, 3, 2, 1].map(size => (
-            <div key={size} className="word-row">
-              {Array.from({ length: size }).map((_, i) => (
-                <button
-                  key={i}
-                  className={`word-box ${words[size][i] ? 'filled' : 'empty'}`}
-                  onClick={() => handleBoxClick(size, i)}
-                >
-                  {words[size][i] || ''}
                 </button>
               ))}
             </div>

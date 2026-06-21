@@ -158,6 +158,14 @@ export const puzzles = [
     threeLetters: "SKY",
     twoLetters: "OX",
     oneLetter: "I"
+  },
+  {
+    sixLetter: "JUMPED",
+    fiveLetters: "GLOCK",
+    fourLetters: "WISH",
+    threeLetters: "TAR",
+    twoLetters: "BY",
+    oneLetter: "X"
   }
 ];
 

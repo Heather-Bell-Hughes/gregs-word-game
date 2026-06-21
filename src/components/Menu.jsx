@@ -28,7 +28,7 @@ export default function Menu({ puzzles, stats, onSelectPuzzle, solvedCount, gave
               className={`puzzle-card puzzle-${stat.status}`}
               onClick={() => onSelectPuzzle(index)}
             >
-              <div className="puzzle-number">{index + 1}</div>
+              <div className="puzzle-number">{puzzle.sixLetter}</div>
               <div className="puzzle-status">
                 {stat.solved && '✓'}
                 {stat.status === 'gaveup' && '⊘'}
