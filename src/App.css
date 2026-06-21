@@ -327,6 +327,17 @@ body {
   opacity: 0.5;
 }
 
+.keyboard-key.delete-key {
+  background: #ff6b6b;
+  color: white;
+  font-size: 18px;
+  min-width: 44px;
+}
+
+.keyboard-key.delete-key:hover {
+  background: #ff5252;
+}
+
 .word-boxes-container {
   display: flex;
   flex-direction: column;
@@ -399,6 +410,12 @@ body {
   background: rgba(76, 175, 80, 0.15);
 }
 
+.word-box.focused {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
 .word-box.filled {
   border-color: #777;
 }
@@ -444,6 +461,15 @@ body {
 
 .btn.reveal {
   color: #ffc107;
+}
+
+.btn.restart {
+  background: #ff6b6b;
+  color: white;
+}
+
+.btn.restart:hover {
+  background: #ff5252;
 }
 
 @media (max-width: 480px) {
