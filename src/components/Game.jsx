@@ -17,7 +17,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   })
   const [selectedWordSize, setSelectedWordSize] = useState(5)
   const [selectedBoxIndex, setSelectedBoxIndex] = useState(null) // Track which specific box is selected
-  const [usedLetters, setUsedLetters] = useState(new Set(puzzle.sixLetter.split('')))
+  const [disabledLetters] = useState(new Set(puzzle.sixLetter.split(''))) // Letters that can't be used (from 6-letter word)
   const [message, setMessage] = useState('')
   const [showRules, setShowRules] = useState(false)
   const [letterMarking, setLetterMarking] = useState({})
@@ -26,8 +26,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   const selectedWordSizeRef = useRef(5)
   const selectedBoxIndexRef = useRef(null)
   const wordsRef = useRef({ 5: '', 4: '', 3: '', 2: '', 1: '' })
-  const usedLettersRef = useRef(new Set(puzzle.sixLetter.split('')))
-
   // Update refs whenever state changes
   useEffect(() => {
     selectedWordSizeRef.current = selectedWordSize
@@ -41,12 +39,8 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     wordsRef.current = words
   }, [words])
 
-  useEffect(() => {
-    usedLettersRef.current = usedLetters
-  }, [usedLetters])
-
   const handleLetterClick = useCallback((letter) => {
-    if (usedLettersRef.current.has(letter)) return
+    if (disabledLetters.has(letter)) return
 
     const wordSize = selectedWordSizeRef.current
     const boxIndex = selectedBoxIndexRef.current
@@ -174,8 +168,8 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
           return
         }
 
-        // Use current state directly, not from closure
-        if (usedLetters.has(letter)) return
+        // Check if letter is disabled from 6-letter puzzle
+        if (disabledLetters.has(letter)) return
 
         // If a specific box is selected, replace letter at that position
         if (boxIndex !== null && boxIndex < selectedWordSize) {
@@ -189,13 +183,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
             [selectedWordSize]: newWord
           }))
 
-          setUsedLetters(prev => {
-            const next = new Set(prev)
-            if (oldLetter) next.delete(oldLetter)
-            next.add(letter)
-            return next
-          })
-
           const nextIndex = boxIndex + 1
           if (nextIndex < selectedWordSize) {
             setSelectedBoxIndex(nextIndex)
@@ -205,7 +192,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
             ...prev,
             [selectedWordSize]: word + letter
           }))
-          setUsedLetters(prev => new Set([...prev, letter]))
         }
 
         setLetterMarking(prev => ({
@@ -219,12 +205,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
         const word = words[selectedWordSize]
         if (word.length > 0) {
-          const lastLetter = word[word.length - 1]
-          setUsedLetters(prevLetters => {
-            const next = new Set(prevLetters)
-            next.delete(lastLetter)
-            return next
-          })
           setWords(prev => ({
             ...prev,
             [selectedWordSize]: word.slice(0, -1)
@@ -247,7 +227,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [selectedWordSize, selectedBoxIndex, words, usedLetters])
+  }, [selectedWordSize, selectedBoxIndex, words, disabledLetters])
 
   const checkWords = () => {
     let allComplete = true
@@ -457,9 +437,9 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
                 return (
                   <button
                     key={key}
-                    className={`keyboard-key ${usedLetters.has(key) ? 'used' : ''}`}
+                    className={`keyboard-key ${disabledLetters.has(key) ? 'used' : ''}`}
                     onClick={() => handleLetterClick(key)}
-                    disabled={usedLetters.has(key)}
+                    disabled={disabledLetters.has(key)}
                   >
                     {key}
                   </button>
