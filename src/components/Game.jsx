@@ -46,21 +46,11 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     const boxIndex = selectedBoxIndexRef.current
     const word = wordsRef.current[wordSize]
 
-    // DEBUG
-    setDebug(`L:${letter} WS:${wordSize} BI:${boxIndex} WL:${word.length}`)
-
     // If a specific box is selected, replace letter at that position
     if (boxIndex !== null && boxIndex < wordSize) {
-      const oldLetter = word[boxIndex]
-      const newWord = word.slice(0, boxIndex) + letter + word.slice(boxIndex + 1)
-
-      // Update used letters
-      setUsedLetters(prevLetters => {
-        const next = new Set(prevLetters)
-        if (oldLetter) next.delete(oldLetter)
-        next.add(letter)
-        return next
-      })
+      // Pad word with placeholder '_' up to selected position
+      let paddedWord = word.padEnd(boxIndex + 1, '_')
+      const newWord = paddedWord.slice(0, boxIndex) + letter + paddedWord.slice(boxIndex + 1)
 
       // Update word
       setWords(prev => ({
@@ -75,7 +65,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       }
     } else if (word.length < wordSize) {
       // Append to end if no specific box selected
-      setUsedLetters(prevLetters => new Set([...prevLetters, letter]))
       setWords(prev => ({
         ...prev,
         [wordSize]: word + letter
@@ -87,7 +76,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       ...prev,
       [wordSize]: []
     }))
-  }, [])
+  }, [disabledLetters])
 
   const handleBoxClick = (size, index) => {
     selectedWordSizeRef.current = size
@@ -106,12 +95,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     const word = wordsRef.current[wordSize]
 
     if (word.length > 0) {
-      const lastLetter = word[word.length - 1]
-      setUsedLetters(prevLetters => {
-        const next = new Set(prevLetters)
-        next.delete(lastLetter)
-        return next
-      })
       setWords(prev => ({
         ...prev,
         [wordSize]: word.slice(0, -1)
@@ -439,7 +422,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
                     key={key}
                     className={`keyboard-key ${disabledLetters.has(key) ? 'used' : ''}`}
                     onClick={() => handleLetterClick(key)}
-                    disabled={disabledLetters.has(key)}
                   >
                     {key}
                   </button>
