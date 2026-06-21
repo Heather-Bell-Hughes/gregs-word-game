@@ -542,6 +542,10 @@ body {
     margin-left: 88px;
   }
 
+  .word-row:nth-child(6) {
+    margin-left: 110px;
+  }
+
   .six-letter-display {
     gap: 3px;
   }
