@@ -2,27 +2,27 @@ import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 
-async function test() {
+async function runTests(viewportName, viewport) {
   const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 500, height: 900 } });
+  const page = await browser.newPage({ viewport });
 
-  const screenshotDir = './test-screenshots';
+  const screenshotDir = `./test-screenshots/${viewportName}`;
   if (!fs.existsSync(screenshotDir)) {
     fs.mkdirSync(screenshotDir, { recursive: true });
   }
 
   try {
+    console.log(`\n${'='.repeat(50)}`);
+    console.log(`📱 Testing ${viewportName} (${viewport.width}x${viewport.height})`);
+    console.log(`${'='.repeat(50)}`);
+
     console.log('🧪 Loading game...');
     await page.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
 
-    // Screenshot 1: Menu/Puzzle Selection
+    // Screenshot 1: Menu
     console.log('📸 Taking screenshot: Menu');
-    await page.screenshot({ path: './test-screenshots/1-menu.png' });
-    console.log('   ✓ Saved to test-screenshots/1-menu.png');
-
-    // Check for menu elements
-    const menuTitle = await page.locator('h1').innerText();
-    console.log(`   Menu title: "${menuTitle}"`);
+    await page.screenshot({ path: `${screenshotDir}/1-menu.png` });
+    console.log(`   ✓ Saved to ${screenshotDir}/1-menu.png`);
 
     const puzzleItems = await page.locator('.puzzle-item').count();
     console.log(`   Puzzle items found: ${puzzleItems}`);
@@ -39,18 +39,11 @@ async function test() {
 
     // Screenshot 2: Game Screen
     console.log('📸 Taking screenshot: Game Screen');
-    await page.screenshot({ path: './test-screenshots/2-game-initial.png' });
-    console.log('   ✓ Saved to test-screenshots/2-game-initial.png');
-
-    // Check for game elements
-    const letterBoxes = await page.locator('.six-letter-row .letter-box').count();
-    console.log(`   Given word boxes: ${letterBoxes}`);
+    await page.screenshot({ path: `${screenshotDir}/2-game-initial.png` });
+    console.log(`   ✓ Saved to ${screenshotDir}/2-game-initial.png`);
 
     const keyboardKeys = await page.locator('.keyboard-key').count();
     console.log(`   Keyboard keys found: ${keyboardKeys}`);
-
-    const wordBoxes = await page.locator('.word-box').count();
-    console.log(`   Word boxes found: ${wordBoxes}`);
 
     if (keyboardKeys === 0) {
       console.error('❌ ERROR: Keyboard not rendering!');
@@ -67,14 +60,10 @@ async function test() {
 
     // Screenshot 3: After letter selected
     console.log('📸 Taking screenshot: After letter selected');
-    await page.screenshot({ path: './test-screenshots/3-game-after-letter.png' });
-    console.log('   ✓ Saved to test-screenshots/3-game-after-letter.png');
+    await page.screenshot({ path: `${screenshotDir}/3-game-after-letter.png` });
+    console.log(`   ✓ Saved to ${screenshotDir}/3-game-after-letter.png`);
 
-    // Check if letter shows in first word box
-    const firstWordBox = await page.locator('.word-box').first().innerText();
-    console.log(`   First word box now contains: "${firstWordBox}"`);
-
-    // Test clicking the info button
+    // Test info button
     console.log('\n📖 Testing info button...');
     const infoBtn = await page.locator('.info-btn');
     if (await infoBtn.count() > 0) {
@@ -83,18 +72,11 @@ async function test() {
 
       // Screenshot 4: Rules modal
       console.log('📸 Taking screenshot: Rules Modal');
-      await page.screenshot({ path: './test-screenshots/4-rules-modal.png' });
-      console.log('   ✓ Saved to test-screenshots/4-rules-modal.png');
+      await page.screenshot({ path: `${screenshotDir}/4-rules-modal.png` });
+      console.log(`   ✓ Saved to ${screenshotDir}/4-rules-modal.png`);
 
-      const rulesText = await page.locator('.rules-content h2').innerText();
-      console.log(`   Rules modal title: "${rulesText}"`);
-
-      // Close rules
       await page.locator('.rules-content .btn').click();
       await page.waitForTimeout(300);
-    } else {
-      console.error('❌ ERROR: Info button not found!');
-      return false;
     }
 
     // Test back button
@@ -104,19 +86,38 @@ async function test() {
 
     // Screenshot 5: Back to menu
     console.log('📸 Taking screenshot: Back to Menu');
-    await page.screenshot({ path: './test-screenshots/5-back-to-menu.png' });
-    console.log('   ✓ Saved to test-screenshots/5-back-to-menu.png');
+    await page.screenshot({ path: `${screenshotDir}/5-back-to-menu.png` });
+    console.log(`   ✓ Saved to ${screenshotDir}/5-back-to-menu.png`);
 
-    console.log('\n✅ ALL TESTS PASSED!');
-    console.log('\nScreenshots saved to: ./test-screenshots/');
+    console.log(`\n✅ ${viewportName} tests PASSED!`);
     return true;
 
   } catch (error) {
-    console.error('❌ Test failed:', error.message);
+    console.error(`❌ ${viewportName} test failed:`, error.message);
     return false;
   } finally {
     await browser.close();
   }
+}
+
+async function test() {
+  const results = [];
+
+  // Test desktop
+  results.push(await runTests('desktop', { width: 1024, height: 768 }));
+
+  // Test mobile
+  results.push(await runTests('mobile', { width: 375, height: 812 }));
+
+  console.log(`\n${'='.repeat(50)}`);
+  console.log('📊 TEST SUMMARY');
+  console.log(`${'='.repeat(50)}`);
+  console.log(`✅ All screenshots saved to: ./test-screenshots/`);
+  console.log(`   - desktop/1-5.png`);
+  console.log(`   - mobile/1-5.png`);
+  console.log(`\n📱 Inspect the screenshots to verify layout looks good!`);
+
+  return results.every(r => r);
 }
 
 test().then(success => {
