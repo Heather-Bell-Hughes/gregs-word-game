@@ -166,18 +166,12 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         const word = words[selectedWordSize]
         const boxIndex = selectedBoxIndex
 
-        // If a specific box is selected, replace letter at that position or append if beyond current length
+        // If a specific box is selected, replace letter at that position
         if (boxIndex !== null && boxIndex < selectedWordSize) {
-          const oldLetter = word[boxIndex]
-          let newWord
-
-          if (boxIndex < word.length) {
-            // Replace existing letter at this position
-            newWord = word.slice(0, boxIndex) + letter + word.slice(boxIndex + 1)
-          } else {
-            // Append if selecting at or beyond current word length
-            newWord = word + letter
-          }
+          // Pad word with placeholder '_' up to selected position
+          let paddedWord = word.padEnd(boxIndex + 1, '_')
+          const oldLetter = paddedWord[boxIndex]
+          const newWord = paddedWord.slice(0, boxIndex) + letter + paddedWord.slice(boxIndex + 1)
 
           setWords(prev => ({
             ...prev,
@@ -438,13 +432,13 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
               {Array.from({ length: size }).map((_, i) => (
                 <button
                   key={i}
-                  className={`word-box ${words[size][i] ? 'filled' : 'empty'} ${selectedWordSize === size && selectedBoxIndex === i ? 'focused' : selectedWordSize === size ? 'selected' : ''} ${letterMarking[size]?.[i] ? letterMarking[size][i] : ''}`}
+                  className={`word-box ${words[size][i] && words[size][i] !== '_' ? 'filled' : 'empty'} ${selectedWordSize === size && selectedBoxIndex === i ? 'focused' : selectedWordSize === size ? 'selected' : ''} ${letterMarking[size]?.[i] ? letterMarking[size][i] : ''}`}
                   onClick={(e) => {
                     e.stopPropagation()
                     handleBoxClick(size, i)
                   }}
                 >
-                  {words[size][i] || ''}
+                  {(words[size][i] && words[size][i] !== '_') ? words[size][i] : ''}
                 </button>
               ))}
             </div>
