@@ -1,25 +1,27 @@
 import { useState } from 'react'
-import { getAllLettersForPuzzle } from '../puzzles'
+
+const KEYBOARD_LAYOUT = [
+  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+  ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+]
 
 export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, totalPuzzles }) {
   const [words, setWords] = useState({
-    6: '',
     5: '',
     4: '',
     3: '',
     2: '',
     1: ''
   })
-  const [usedLetters, setUsedLetters] = useState(new Set())
+  const [usedLetters, setUsedLetters] = useState(new Set(puzzle.sixLetter.split('')))
   const [message, setMessage] = useState('')
-
-  const availableLetters = getAllLettersForPuzzle(puzzle)
 
   const handleLetterClick = (letter) => {
     if (usedLetters.has(letter)) return
 
-    // Try to add to first incomplete word box (6, 5, 4, 3, 2, 1)
-    for (const size of [6, 5, 4, 3, 2, 1]) {
+    // Try to add to first incomplete word box (5, 4, 3, 2, 1)
+    for (const size of [5, 4, 3, 2, 1]) {
       if (words[size].length < size) {
         setWords(prev => ({
           ...prev,
@@ -48,7 +50,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
   const checkWords = () => {
     const expected = {
-      6: puzzle.sixLetter,
       5: puzzle.fiveLetters,
       4: puzzle.fourLetters,
       3: puzzle.threeLetters,
@@ -57,7 +58,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     }
 
     let allCorrect = true
-    for (const size of [6, 5, 4, 3, 2, 1]) {
+    for (const size of [5, 4, 3, 2, 1]) {
       if (words[size] !== expected[size]) {
         allCorrect = false
         break
@@ -78,7 +79,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
   const revealAnswer = () => {
     setWords({
-      6: puzzle.sixLetter,
       5: puzzle.fiveLetters,
       4: puzzle.fourLetters,
       3: puzzle.threeLetters,
@@ -109,8 +109,8 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   }
 
   const resetPuzzle = () => {
-    setWords({ 6: '', 5: '', 4: '', 3: '', 2: '', 1: '' })
-    setUsedLetters(new Set())
+    setWords({ 5: '', 4: '', 3: '', 2: '', 1: '' })
+    setUsedLetters(new Set(puzzle.sixLetter.split('')))
     setMessage('')
   }
 
@@ -128,21 +128,34 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       </div>
 
       <div className="puzzle-area">
-        <div className="keyboard-grid">
-          {availableLetters.map(letter => (
-            <button
-              key={letter}
-              className={`key ${usedLetters.has(letter) ? 'used' : ''}`}
-              onClick={() => handleLetterClick(letter)}
-              disabled={usedLetters.has(letter)}
-            >
-              {letter}
-            </button>
+        <div className="six-letter-display">
+          <div className="six-letter-label">Given Word</div>
+          <div className="six-letter-word">
+            {puzzle.sixLetter.split('').map((letter, i) => (
+              <div key={i} className="letter-box">{letter}</div>
+            ))}
+          </div>
+        </div>
+
+        <div className="keyboard-container">
+          {KEYBOARD_LAYOUT.map((row, rowIndex) => (
+            <div key={rowIndex} className="keyboard-row">
+              {row.map(letter => (
+                <button
+                  key={letter}
+                  className={`keyboard-key ${usedLetters.has(letter) ? 'used' : ''}`}
+                  onClick={() => handleLetterClick(letter)}
+                  disabled={usedLetters.has(letter)}
+                >
+                  {letter}
+                </button>
+              ))}
+            </div>
           ))}
         </div>
 
         <div className="word-boxes-container">
-          {[6, 5, 4, 3, 2, 1].map(size => (
+          {[5, 4, 3, 2, 1].map(size => (
             <div key={size} className="word-row">
               {Array.from({ length: size }).map((_, i) => (
                 <button
