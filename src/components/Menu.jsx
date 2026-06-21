@@ -19,21 +19,21 @@ export default function Menu({ puzzles, stats, onSelectPuzzle, solvedCount, gave
         </div>
       </div>
 
-      <div className="puzzles-grid">
+      <div className="puzzles-list">
         {puzzles.map((puzzle, index) => {
           const stat = stats[index]
           return (
             <button
               key={index}
-              className={`puzzle-card puzzle-${stat.status}`}
+              className={`puzzle-item puzzle-${stat.status}`}
               onClick={() => onSelectPuzzle(index)}
             >
-              <div className="puzzle-number">{puzzle.sixLetter}</div>
-              <div className="puzzle-status">
+              <span className="puzzle-name">{puzzle.sixLetter}</span>
+              <span className="puzzle-status">
                 {stat.solved && '✓'}
                 {stat.status === 'gaveup' && '⊘'}
                 {stat.status === 'unsolved' && '○'}
-              </div>
+              </span>
             </button>
           )
         })}
