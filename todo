@@ -1,0 +1,10 @@
+If I type on the page then it should put that letter into the box (assuming its a letter that is allowed)
+The 6,5,4,3,2,1 inverted triangle should be centered but the triangle is not isoseles it kinda leans to the right a bit
+There should be a check button that checks if each word is in the dictionary or not
+Ok i made a mistake the first word should be solved then - the 6 letter word should
+be there and visible - and the whole keyboard available other than used letters (so the 6 letters from the first word) and then as you use letters they become unavailab
+le for future input
+Can the keyboard be querty btw? Or maybe just use the system keyboard instead
+Also can you add the word "Glock" to the dictionary?
+Also i don't like having each level be a square its confusing whats going on. Maybe a list would be better? Like call it "Puzzle 1" etc.
+And there should be an info/questio button for the rules
