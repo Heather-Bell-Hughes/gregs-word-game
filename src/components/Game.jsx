@@ -363,9 +363,9 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       )}
 
       <div className="buttons-row">
-        <button className="btn" onClick={clearCurrentWord}>Clear</button>
-        <button className="btn reveal" onClick={revealAnswer}>Reveal</button>
         <button className="btn" onClick={checkWords}>Check</button>
+        <button className="btn reveal" onClick={revealAnswer}>Reveal</button>
+        <button className="btn" onClick={clearCurrentWord}>Clear</button>
         <button className="btn restart" onClick={() => {
           if (confirm('Are you sure you want to restart the puzzle?')) {
             resetPuzzle()
