@@ -96,7 +96,16 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     const boxIndex = selectedBoxIndexRef.current
     const word = wordsRef.current[wordSize]
 
-    if (word.length > 0) {
+    if (boxIndex !== null && boxIndex < word.length) {
+      // Delete the specific selected box
+      const paddedWord = word.padEnd(boxIndex + 1, '_')
+      const newWord = paddedWord.slice(0, boxIndex) + '_' + paddedWord.slice(boxIndex + 1)
+      setWords(prev => ({
+        ...prev,
+        [wordSize]: newWord.replace(/_+$/, '') // Remove trailing underscores
+      }))
+    } else if (word.length > 0) {
+      // If no specific box selected, delete from end
       setWords(prev => ({
         ...prev,
         [wordSize]: word.slice(0, -1)
