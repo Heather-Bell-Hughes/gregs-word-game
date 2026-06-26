@@ -145,6 +145,11 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   // Keyboard handler that always uses current state
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Allow browser shortcuts (Cmd+R, Cmd+W, etc.)
+      if (e.ctrlKey || e.metaKey) {
+        return
+      }
+
       const letter = e.key.toUpperCase()
 
       // Check if it's a letter key
