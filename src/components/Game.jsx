@@ -335,7 +335,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
       <div className="buttons-row">
         <button className="btn reveal" onClick={showSolution ? () => window.location.reload() : showSolutionWords}>
-          {showSolution ? 'New Game' : 'Reveal'}
+          {showSolution ? 'New Game' : 'Solution'}
         </button>
         <button className="btn" onClick={clearCurrentWord}>Clear</button>
         <button className="btn restart" onClick={() => {
