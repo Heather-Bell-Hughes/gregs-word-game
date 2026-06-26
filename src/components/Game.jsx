@@ -238,7 +238,8 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         allComplete = false
       }
 
-      if (word.length > 0) {
+      // Only validate and mark if word is complete
+      if (word.length === size) {
         const valid = isValidWord(word)
         for (let i = 0; i < word.length; i++) {
           marking[size][i] = valid ? 'correct' : 'wrong'
