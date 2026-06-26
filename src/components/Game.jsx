@@ -7,7 +7,7 @@ const KEYBOARD_LAYOUT = [
   ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '', 'DEL']
 ]
 
-export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, totalPuzzles }) {
+export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, onNextPuzzle, totalPuzzles }) {
   const [words, setWords] = useState({
     5: '',
     4: '',
@@ -332,7 +332,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
       <div className="buttons-row">
         {(showSolution || puzzleSolved) ? (
-          <button className="btn reveal" onClick={() => window.location.reload()}>
+          <button className="btn reveal" onClick={onNextPuzzle}>
             New Game
           </button>
         ) : (

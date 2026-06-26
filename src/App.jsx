@@ -35,6 +35,16 @@ export default function App() {
     setCurrentView('menu')
   }
 
+  const handleNextPuzzle = () => {
+    const nextIndex = currentPuzzleIndex + 1
+    if (nextIndex < puzzles.length) {
+      setCurrentPuzzleIndex(nextIndex)
+    } else {
+      // If at last puzzle, go back to menu
+      setCurrentView('menu')
+    }
+  }
+
   const handlePuzzleSolved = () => {
     setStats(prev => {
       const newStats = [...prev]
@@ -80,6 +90,7 @@ export default function App() {
           onBack={handleBackToMenu}
           onSolved={handlePuzzleSolved}
           onGaveUp={handlePuzzleGaveUp}
+          onNextPuzzle={handleNextPuzzle}
           totalPuzzles={puzzles.length}
         />
       )}
