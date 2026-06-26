@@ -1,5 +1,6 @@
-// Auto-generated dictionary from SCOWL word list
-// Contains 167,190 valid English words
+// Dictionary from SCOWL 50 (cleaned/common words)
+// Contains 101,947 valid English words
+// Includes GLOCK and FRACK as added by Greg
 
 import dictionaryText from './dictionary.txt?raw'
 
