@@ -255,9 +255,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       setPuzzleSolved(true)
       setMessage('🎉 Congratulations, Well Done!')
       onSolved()
-      setTimeout(() => {
-        onBack()
-      }, 2000)
     }
   }, [words, puzzleSolved, showSolution, onSolved, onBack])
 
@@ -334,15 +331,21 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       )}
 
       <div className="buttons-row">
-        <button className="btn reveal" onClick={showSolution ? () => window.location.reload() : showSolutionWords}>
-          {showSolution ? 'New Game' : 'Solution'}
-        </button>
-        <button className="btn" onClick={clearCurrentWord}>Clear</button>
-        <button className="btn restart" onClick={() => {
+        {(showSolution || puzzleSolved) ? (
+          <button className="btn reveal" onClick={() => window.location.reload()}>
+            New Game
+          </button>
+        ) : (
+          <button className="btn reveal" onClick={showSolutionWords}>
+            Solution
+          </button>
+        )}
+        {!puzzleSolved && <button className="btn" onClick={clearCurrentWord}>Clear</button>}
+        {!puzzleSolved && <button className="btn restart" onClick={() => {
           if (confirm('Are you sure you want to restart the puzzle?')) {
             resetPuzzle()
           }
-        }}>Restart</button>
+        }}>Restart</button>}
       </div>
 
       <div className="puzzle-area">
