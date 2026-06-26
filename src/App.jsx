@@ -5,7 +5,7 @@ import Game from './components/Game'
 import './App.css'
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('menu') // 'menu' or 'game'
+  const [currentView, setCurrentView] = useState('game') // 'menu' or 'game'
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0)
   const [stats, setStats] = useState(() => {
     const saved = localStorage.getItem('wordGameStats')
