@@ -307,7 +307,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
       <div className="header">
         <button className="back-btn" onClick={onBack}>← Back</button>
-        <div className="puzzle-title">Puzzle {puzzleIndex + 1} ({totalPuzzles})</div>
+        <div className="puzzle-title">AlphaDelta</div>
         <button className="info-btn" onClick={() => setShowRules(!showRules)}>?</button>
       </div>
 
@@ -316,15 +316,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
           <div className="rules-content">
             <h2>How to Play</h2>
             <p>When the game starts, a 6-letter word will appear from an A-Z alphabet. Using the remaining letters of the alphabet, make a 5-letter word, a 4-letter word, a 3-letter word, a 2-letter word &amp; a 1-letter word in the boxes. Each alphabet letter can only be used once. All valid words are regular everyday english words.</p>
-            <h3>Additional Rules:</h3>
-            <ul>
-              <li>All 5 words must have <strong>exactly one vowel</strong> each</li>
-              <li>The 1-letter word can only be <strong>A</strong> or <strong>I</strong></li>
-              <li>Click any word box to select it, then type letters</li>
-              <li>Use your keyboard (A-Z) or click letter buttons</li>
-              <li>Press <strong>Delete</strong> or <strong>Backspace</strong> to remove a letter</li>
-              <li>Words are validated automatically as you complete them</li>
-            </ul>
             <button className="btn" onClick={() => setShowRules(false)}>Close</button>
           </div>
         </div>
