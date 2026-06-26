@@ -16,11 +16,13 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     1: ''
   })
   const [selectedWordSize, setSelectedWordSize] = useState(5)
-  const [selectedBoxIndex, setSelectedBoxIndex] = useState(null) // Track which specific box is selected
-  const [disabledLetters] = useState(new Set(puzzle.sixLetter.split(''))) // Letters that can't be used (from 6-letter word)
+  const [selectedBoxIndex, setSelectedBoxIndex] = useState(null)
+  const [disabledLetters] = useState(new Set(puzzle.sixLetter.split('')))
   const [message, setMessage] = useState('')
   const [showRules, setShowRules] = useState(false)
   const [letterMarking, setLetterMarking] = useState({})
+  const [showSolution, setShowSolution] = useState(false)
+  const [puzzleSolved, setPuzzleSolved] = useState(false)
 
   // Refs for current state values (for immediate access in event handlers)
   const selectedWordSizeRef = useRef(5)
@@ -116,13 +118,23 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     }))
   }, [])
 
-  // Auto-advance to next word when current word is complete (no underscores)
+  // Auto-advance to next word and auto-check when current word is complete
   useEffect(() => {
     const word = words[selectedWordSize]
     if (word.length === selectedWordSize && !word.includes('_')) {
-      // Word is complete and has no placeholders, move to next word
       const wordOrder = [5, 4, 3, 2, 1]
       const currentIndex = wordOrder.indexOf(selectedWordSize)
+
+      // Check if this word is valid
+      if (word.length > 0) {
+        const isValid = isValidWord(word)
+        setLetterMarking(prev => ({
+          ...prev,
+          [selectedWordSize]: word.split('').map(() => isValid ? 'correct' : 'wrong')
+        }))
+      }
+
+      // Move to next word
       if (currentIndex < wordOrder.length - 1) {
         const nextSize = wordOrder[currentIndex + 1]
         setSelectedWordSize(nextSize)
@@ -212,30 +224,25 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [selectedWordSize, selectedBoxIndex, words, disabledLetters])
 
-  const checkWords = () => {
+  // Auto-check all words for completion and validity
+  useEffect(() => {
     let allComplete = true
     let allValid = true
     const marking = {}
 
-    // Check ALL words
     for (const size of [5, 4, 3, 2, 1]) {
-      const word = words[size].replace(/_/g, '') // Remove placeholder underscores
-      marking[size] = [] // Initialize marking array for this word
+      const word = words[size].replace(/_/g, '')
+      marking[size] = []
 
-      // Check if word is COMPLETE (no underscores, correct length)
       if (word.length !== size) {
         allComplete = false
       }
 
-      // Check if word is valid in dictionary
       if (word.length > 0) {
         const valid = isValidWord(word)
-
-        // Mark each letter - green if valid word, red if not
         for (let i = 0; i < word.length; i++) {
           marking[size][i] = valid ? 'correct' : 'wrong'
         }
-
         if (!valid) {
           allValid = false
         }
@@ -244,24 +251,18 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
 
     setLetterMarking(marking)
 
-    // Check results
-    if (!allComplete) {
-      setMessage('✓ Good so far! Fill in the remaining words.')
-      setTimeout(() => setMessage(''), 3000)
-    } else if (allValid) {
-      // All words complete AND all valid
-      setMessage('✓ Perfect!')
+    if (allComplete && allValid && !puzzleSolved && !showSolution) {
+      setPuzzleSolved(true)
+      setMessage('🎉 Congratulations, Well Done!')
       onSolved()
       setTimeout(() => {
         onBack()
-      }, 1500)
-    } else {
-      setMessage('✗ Some words are not in the dictionary. Try again!')
-      setTimeout(() => setMessage(''), 3000)
+      }, 2000)
     }
-  }
+  }, [words, puzzleSolved, showSolution, onSolved, onBack])
 
-  const revealAnswer = () => {
+  const showSolutionWords = () => {
+    setShowSolution(true)
     setWords({
       5: puzzle.fiveLetters,
       4: puzzle.fourLetters,
@@ -269,35 +270,21 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       2: puzzle.twoLetters,
       1: puzzle.oneLetter
     })
-    const allLetters = new Set(
-      (puzzle.sixLetter + puzzle.fiveLetters +
-       puzzle.fourLetters + puzzle.threeLetters +
-       puzzle.twoLetters + puzzle.oneLetter).split('')
-    )
-    setUsedLetters(allLetters)
-
-    alert(
-      `Solution:\n\n` +
-      `6-letter: ${puzzle.sixLetter}\n` +
-      `5-letter: ${puzzle.fiveLetters}\n` +
-      `4-letter: ${puzzle.fourLetters}\n` +
-      `3-letter: ${puzzle.threeLetters}\n` +
-      `2-letter: ${puzzle.twoLetters}\n` +
-      `1-letter: ${puzzle.oneLetter}`
-    )
-
+    const marking = {}
+    for (const size of [5, 4, 3, 2, 1]) {
+      marking[size] = Array(size).fill('correct')
+    }
+    setLetterMarking(marking)
     onGaveUp()
-    setTimeout(() => {
-      onBack()
-    }, 500)
   }
 
   const resetPuzzle = () => {
     setWords({ 5: '', 4: '', 3: '', 2: '', 1: '' })
-    setUsedLetters(new Set(puzzle.sixLetter.split('')))
     setMessage('')
     setLetterMarking({})
     setSelectedBoxIndex(null)
+    setShowSolution(false)
+    setPuzzleSolved(false)
   }
 
   const clearCurrentWord = () => {
@@ -305,16 +292,6 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       ...prev,
       [selectedWordSize]: ''
     }))
-
-    // Release letters from used set
-    const word = words[selectedWordSize]
-    setUsedLetters(prev => {
-      const next = new Set(prev)
-      for (const letter of word) {
-        next.delete(letter)
-      }
-      return next
-    })
 
     setLetterMarking(prev => ({
       ...prev,
@@ -326,7 +303,7 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
   return (
     <div className="container">
       {message && (
-        <div className={`message ${message.includes('✓') ? 'success' : 'error'}`}>
+        <div className={`message ${message.includes('✓') || message.includes('🎉') ? 'success' : 'error'}`}>
           {message}
         </div>
       )}
@@ -341,21 +318,15 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
         <div className="rules-modal">
           <div className="rules-content">
             <h2>How to Play</h2>
-            <p><strong>Goal:</strong> Find one 6, 5, 4, 3, 2, and 1-letter word using each letter exactly once.</p>
+            <p>When the game starts, a 6-letter word will appear from an A-Z alphabet. Using the remaining letters of the alphabet, make a 5-letter word, a 4-letter word, a 3-letter word, a 2-letter word &amp; a 1-letter word in the boxes. Each alphabet letter can only be used once. All valid words are regular everyday english words.</p>
+            <h3>Additional Rules:</h3>
             <ul>
-              <li>The <strong>6-letter word is given</strong> at the top</li>
-              <li>Using those 6 letters plus 15 additional letters (21 total), find:</li>
-              <li style={{ marginLeft: '20px' }}>• One 5-letter word</li>
-              <li style={{ marginLeft: '20px' }}>• One 4-letter word</li>
-              <li style={{ marginLeft: '20px' }}>• One 3-letter word</li>
-              <li style={{ marginLeft: '20px' }}>• One 2-letter word</li>
-              <li style={{ marginLeft: '20px' }}>• One 1-letter word</li>
-              <li>Each letter can only be used <strong>once</strong> across all words</li>
+              <li>All 5 words must have <strong>exactly one vowel</strong> each</li>
+              <li>The 1-letter word can only be <strong>A</strong> or <strong>I</strong></li>
               <li>Click any word box to select it, then type letters</li>
               <li>Use your keyboard (A-Z) or click letter buttons</li>
               <li>Press <strong>Delete</strong> or <strong>Backspace</strong> to remove a letter</li>
-              <li>Press <strong>Check</strong> to verify complete words</li>
-              <li>Press <strong>Reveal</strong> to see the solution</li>
+              <li>Words are validated automatically as you complete them</li>
             </ul>
             <button className="btn" onClick={() => setShowRules(false)}>Close</button>
           </div>
@@ -363,8 +334,9 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
       )}
 
       <div className="buttons-row">
-        <button className="btn" onClick={checkWords}>Check</button>
-        <button className="btn reveal" onClick={revealAnswer}>Reveal</button>
+        <button className="btn reveal" onClick={showSolution ? () => window.location.reload() : showSolutionWords}>
+          {showSolution ? 'New Game' : 'Reveal'}
+        </button>
         <button className="btn" onClick={clearCurrentWord}>Clear</button>
         <button className="btn restart" onClick={() => {
           if (confirm('Are you sure you want to restart the puzzle?')) {
