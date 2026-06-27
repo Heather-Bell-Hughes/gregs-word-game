@@ -1,15 +1,15 @@
 import { defineConfig, devices } from '@playwright/test'
 
+/** Config for live-site smoke tests — no local dev server. */
 export default defineConfig({
-  testDir: './tests',
-  testIgnore: '**/production.spec.js',
-  fullyParallel: true,
+  testMatch: '**/production.spec.js',
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
+  timeout: 60_000,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:5173',
+    ...devices['Desktop Chrome'],
     trace: 'on-first-retry',
   },
   projects: [
@@ -18,9 +18,4 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-  },
 })

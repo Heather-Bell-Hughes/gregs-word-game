@@ -11,8 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout deployed commit
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -23,26 +25,24 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Wait for GitHub Pages propagation
-        run: sleep 30
-
-      - name: Check site is accessible
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://heather-bell-hughes.github.io/gregs-word-game/)
-          if [ "$response" != "200" ]; then
-            echo "Site returned HTTP $response"
-            exit 1
-          fi
-          echo "Site is accessible (HTTP $response)"
-
-      - name: Verify SPA fallback exists
-        run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://heather-bell-hughes.github.io/gregs-word-game/404.html)
-          if [ "$response" != "200" ]; then
-            echo "404.html returned HTTP $response — puzzle deep links will fail"
-            exit 1
-          fi
-          echo "404.html is present (HTTP $response)"
+          SITE="https://heather-bell-hughes.github.io/gregs-word-game"
+          for i in $(seq 1 18); do
+            code=$(curl -s -o /tmp/page.html -w "%{http_code}" "$SITE/")
+            fallback=$(curl -s -o /dev/null -w "%{http_code}" "$SITE/404.html")
+            if [ "$code" = "200" ] && [ "$fallback" = "200" ] && grep -q 'id="root"' /tmp/page.html; then
+              echo "Site ready after attempt $i (HTTP $code, 404.html $fallback)"
+              exit 0
+            fi
+            echo "Attempt $i: page=$code fallback=$fallback — waiting 10s..."
+            sleep 10
+          done
+          echo "Site did not become ready within 3 minutes"
+          exit 1
 
       - name: Run production Playwright smoke tests
         run: npm run test:production
