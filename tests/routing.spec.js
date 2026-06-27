@@ -30,4 +30,25 @@ test.describe('AlphaDelta routing', () => {
     await expect(page).toHaveURL(/\/2\/?$/)
     await expect(page.getByTestId('six-letter-row')).toHaveText('BRUNCH')
   })
+
+  test('loads hidden menu at /menu with no link from puzzle', async ({ page }) => {
+    await page.goto('/menu')
+    await expect(page.getByTestId('menu-screen')).toBeVisible()
+    await expect(page.getByText('🧩 AlphaDelta')).toBeVisible()
+    await expect(page.getByTestId('game-screen')).toHaveCount(0)
+
+    await page.goto('/1')
+    await expect(page.getByTestId('game-screen')).toBeVisible()
+    await expect(page.getByTestId('menu-screen')).toHaveCount(0)
+    await expect(page.getByRole('link', { name: /menu/i })).toHaveCount(0)
+    await expect(page.getByRole('button', { name: /menu/i })).toHaveCount(0)
+  })
+
+  test('menu puzzle selection navigates to puzzle URL', async ({ page }) => {
+    await page.goto('/menu')
+    await page.getByTestId('menu-puzzle-3').click()
+    await expect(page).toHaveURL(/\/3\/?$/)
+    await expect(page.getByTestId('six-letter-row')).toHaveText('THINKS')
+    await expect(page.getByTestId('menu-screen')).toHaveCount(0)
+  })
 })

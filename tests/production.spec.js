@@ -38,6 +38,13 @@ test.describe('Production site smoke tests', () => {
     expect(response.status()).toBe(200)
   })
 
+  test('hidden menu loads at /menu', async ({ page }) => {
+    await page.goto(prodUrl('menu'))
+    await expect(page.getByTestId('menu-screen')).toBeVisible()
+    await expect(page.getByText('🧩 AlphaDelta')).toBeVisible()
+    await expect(page.getByTestId('game-screen')).toHaveCount(0)
+  })
+
   for (const device of PHONE_VIEWPORTS.slice(0, 3)) {
     test(`mobile layout on ${device.name}`, async ({ page }) => {
       await page.setViewportSize({ width: device.width, height: device.height })

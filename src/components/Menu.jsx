@@ -1,0 +1,47 @@
+export default function Menu({ puzzles, stats, onSelectPuzzle, solvedCount, gaveUpCount }) {
+  return (
+    <div className="menu-container" data-testid="menu-screen">
+      <div className="menu-header">
+        <h1>🧩 AlphaDelta</h1>
+        <div className="stats-bar">
+          <div className="stat">
+            <span className="stat-label">Solved</span>
+            <span className="stat-value">{solvedCount}</span>
+          </div>
+          <div className="stat">
+            <span className="stat-label">Gave Up</span>
+            <span className="stat-value">{gaveUpCount}</span>
+          </div>
+          <div className="stat">
+            <span className="stat-label">Total</span>
+            <span className="stat-value">{puzzles.length}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="puzzles-list">
+        {puzzles.map((puzzle, index) => {
+          const stat = stats[index] || { status: 'unsolved', solved: false }
+          return (
+            <button
+              key={index}
+              className={`puzzle-item puzzle-${stat?.status || 'unsolved'}`}
+              data-testid={`menu-puzzle-${index + 1}`}
+              onClick={() => onSelectPuzzle(index)}
+            >
+              <span className="puzzle-name">
+                Puzzle #{index + 1}: {puzzle.sixLetter}
+                {puzzle.difficulty === 'hard' && <span className="hard-badge">⭐ HARD</span>}
+              </span>
+              <span className="puzzle-status">
+                {stat?.solved && '✓'}
+                {stat?.status === 'gaveup' && '⊘'}
+                {stat?.status === 'unsolved' && '○'}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}

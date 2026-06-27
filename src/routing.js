@@ -21,9 +21,19 @@ function stripBasePath(pathname, baseUrl = getBaseUrl()) {
   return pathname
 }
 
+/** True when the URL is the hidden puzzle picker at `/menu`. */
+export function isMenuPath(pathname, baseUrl = getBaseUrl()) {
+  const path = stripBasePath(pathname, baseUrl)
+  return path === '/menu' || path === '/menu/'
+}
+
 /** Parse `/`, `/1`, `/42` into a zero-based puzzle index. */
 export function parsePuzzleIndexFromPath(pathname, puzzleCount, baseUrl = getBaseUrl()) {
   const path = stripBasePath(pathname, baseUrl)
+
+  if (isMenuPath(pathname, baseUrl)) {
+    return getTodaysPuzzleIndex(puzzleCount)
+  }
 
   if (path === '/' || path === '') {
     return getTodaysPuzzleIndex(puzzleCount)
@@ -43,7 +53,16 @@ export function puzzlePath(index, baseUrl = getBaseUrl()) {
   return `${base}${index + 1}`.replace(/([^:]\/)\/+/g, '$1')
 }
 
+export function menuPath(baseUrl = getBaseUrl()) {
+  const base = baseUrl.replace(/\/$/, '')
+  return `${base}/menu`.replace(/([^:]\/)\/+/g, '$1')
+}
+
 export function navigateToPuzzle(index) {
   const url = puzzlePath(index)
   window.history.pushState({ puzzleIndex: index }, '', url)
+}
+
+export function navigateToMenu() {
+  window.history.pushState({ view: 'menu' }, '', menuPath())
 }
