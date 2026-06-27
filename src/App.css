@@ -504,8 +504,10 @@ body {
 
 @media (max-width: 480px) {
   #root {
-    align-items: flex-start;
-    padding: 10px 6px 12px;
+    align-items: stretch;
+    padding: 8px 6px;
+    min-height: 100dvh;
+    box-sizing: border-box;
   }
 
   .menu-container {
@@ -541,11 +543,14 @@ body {
   }
 
   .container {
-    padding: 8px 4px;
+    padding: 4px 2px;
+    min-height: calc(100dvh - 16px);
+    display: flex;
+    flex-direction: column;
   }
 
   .header {
-    margin-bottom: 15px;
+    margin-bottom: 8px;
   }
 
   .level-title {
@@ -553,27 +558,41 @@ body {
   }
 
   .puzzle-area {
-    gap: 12px;
-    margin-bottom: 12px;
+    flex: 1;
+    min-height: 0;
+    gap: 8px;
+    margin-bottom: 0;
     width: 100%;
     align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .word-boxes-container {
-    --word-box-size: 36px;
-    --word-box-gap: 6px;
-    max-width: none;
+    flex: 1;
+    min-height: 0;
     width: 100%;
-    padding: 0;
+    max-width: none;
+    padding: 0 2px;
+    container-type: size;
+    --word-box-gap: 6px;
+    --word-row-gap: clamp(4px, 1vh, 10px);
+    gap: var(--word-row-gap);
+    --word-box-size: min(
+      calc((100cqw - 5 * var(--word-box-gap)) / 6),
+      calc((100cqh - 5 * var(--word-row-gap)) / 6)
+    );
   }
 
   .letter-box {
     width: var(--word-box-size);
     height: var(--word-box-size);
-    font-size: 16px;
+    font-size: clamp(14px, calc(var(--word-box-size) * 0.42), 28px);
   }
 
   .keyboard-container {
+    flex-shrink: 0;
     width: 100%;
     max-width: 100%;
     --keyboard-key-gap: 2px;
@@ -600,16 +619,16 @@ body {
   .word-box {
     width: var(--word-box-size);
     height: var(--word-box-size);
-    font-size: 14px;
+    font-size: clamp(14px, calc(var(--word-box-size) * 0.42), 28px);
   }
 
   .buttons-row {
-    gap: 8px;
-    margin-bottom: 15px;
+    gap: 6px;
+    margin-bottom: 8px;
   }
 
   .btn {
-    padding: 8px 12px;
+    padding: 6px 10px;
     font-size: 12px;
   }
 }

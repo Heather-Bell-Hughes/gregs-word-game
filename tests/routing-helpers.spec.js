@@ -20,4 +20,9 @@ test.describe('routing helpers', () => {
     expect(parsePuzzleIndexFromPath('/999', count)).toBe(99)
     expect(parsePuzzleIndexFromPath('/0', count)).toBe(0)
   })
+
+  test('parsePuzzleIndexFromPath strips GitHub Pages base path', () => {
+    expect(parsePuzzleIndexFromPath('/gregs-word-game/3', count, '/gregs-word-game/')).toBe(2)
+    expect(parsePuzzleIndexFromPath('/gregs-word-game/', count, '/gregs-word-game/')).toBe(getTodaysPuzzleIndex(count))
+  })
 })

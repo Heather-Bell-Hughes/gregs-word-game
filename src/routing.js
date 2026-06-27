@@ -22,8 +22,8 @@ function stripBasePath(pathname, baseUrl = getBaseUrl()) {
 }
 
 /** Parse `/`, `/1`, `/42` into a zero-based puzzle index. */
-export function parsePuzzleIndexFromPath(pathname, puzzleCount) {
-  const path = stripBasePath(pathname)
+export function parsePuzzleIndexFromPath(pathname, puzzleCount, baseUrl = getBaseUrl()) {
+  const path = stripBasePath(pathname, baseUrl)
 
   if (path === '/' || path === '') {
     return getTodaysPuzzleIndex(puzzleCount)

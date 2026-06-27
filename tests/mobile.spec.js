@@ -1,11 +1,30 @@
 import { test, expect } from '@playwright/test'
 import { openFirstPuzzle, typeWord } from './helpers.js'
+import { assertMobileLayout } from './device-layout-helpers.js'
 
 test.describe('AlphaDelta mobile layout', () => {
   test.use({ viewport: { width: 375, height: 812 } })
 
   test.beforeEach(async ({ page }) => {
     await openFirstPuzzle(page)
+  })
+
+  test('word boxes are at least as wide as keyboard keys on mobile', async ({ page }) => {
+    const keyWidth = (await page.getByTestId('keyboard-key-Q').boundingBox()).width
+    const boxWidth = (await page.getByTestId('word-box-5-0').boundingBox()).width
+    expect(boxWidth).toBeGreaterThanOrEqual(keyWidth - 1)
+  })
+
+  test('game fits in viewport without scrolling on mobile', async ({ page }) => {
+    const dimensions = await page.evaluate(() => ({
+      scrollHeight: document.documentElement.scrollHeight,
+      clientHeight: document.documentElement.clientHeight,
+    }))
+    expect(dimensions.scrollHeight).toBeLessThanOrEqual(dimensions.clientHeight + 2)
+  })
+
+  test('full mobile layout checks pass on iPhone 13 mini', async ({ page }) => {
+    await assertMobileLayout(page)
   })
 
   test('word rows are centered under the six-letter row on mobile', async ({ page }) => {
