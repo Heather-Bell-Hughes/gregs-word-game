@@ -288,8 +288,8 @@ body {
 }
 
 .letter-box {
-  width: 50px;
-  height: 50px;
+  width: var(--word-box-size, 50px);
+  height: var(--word-box-size, 50px);
   border: 2px solid #4caf50;
   background: rgba(76, 175, 80, 0.1);
   border-radius: 8px;
@@ -370,49 +370,27 @@ body {
 .word-boxes-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 15px;
   max-width: 340px;
   margin: 0 auto;
   padding: 0 10px;
+  --word-box-size: 50px;
+  --word-box-gap: 8px;
 }
 
 .word-row {
   display: flex;
-  gap: 8px;
+  gap: var(--word-box-gap);
   justify-content: center;
   white-space: nowrap;
   flex-wrap: nowrap;
   cursor: pointer;
 }
 
-.word-row:nth-child(1) {
-  margin-left: 0;
-}
-
-.word-row:nth-child(2) {
-  margin-left: 29px;
-}
-
-.word-row:nth-child(3) {
-  margin-left: 58px;
-}
-
-.word-row:nth-child(4) {
-  margin-left: 87px;
-}
-
-.word-row:nth-child(5) {
-  margin-left: 116px;
-}
-
-.word-row:nth-child(6) {
-  margin-left: 145px;
-}
-
 .word-box {
-  width: 50px;
-  height: 50px;
+  width: var(--word-box-size);
+  height: var(--word-box-size);
   border: 2px solid #555;
   background: #2a2a2a;
   border-radius: 8px;
@@ -581,9 +559,17 @@ body {
     align-items: stretch;
   }
 
+  .word-boxes-container {
+    --word-box-size: 36px;
+    --word-box-gap: 6px;
+    max-width: none;
+    width: 100%;
+    padding: 0;
+  }
+
   .letter-box {
-    width: 40px;
-    height: 40px;
+    width: var(--word-box-size);
+    height: var(--word-box-size);
     font-size: 16px;
   }
 
@@ -611,47 +597,9 @@ body {
     font-size: clamp(16px, calc(var(--keyboard-key-width) * 0.5), 20px);
   }
 
-  .word-row {
-    gap: 6px;
-  }
-
-  .word-row:nth-child(1) {
-    margin-left: 0;
-  }
-
-  .word-row:nth-child(2) {
-    margin-left: 22px;
-  }
-
-  .word-row:nth-child(3) {
-    margin-left: 44px;
-  }
-
-  .word-row:nth-child(4) {
-    margin-left: 66px;
-  }
-
-  .word-row:nth-child(5) {
-    margin-left: 88px;
-  }
-
-  .word-row:nth-child(6) {
-    margin-left: 110px;
-  }
-
-  .six-letter-display {
-    gap: 3px;
-  }
-
-  .letter-box {
-    width: 40px;
-    height: 40px;
-    gap: 4px;
-  }
-
   .word-box {
-    width: 36px;
-    height: 36px;
+    width: var(--word-box-size);
+    height: var(--word-box-size);
     font-size: 14px;
   }
 

@@ -8,6 +8,20 @@ test.describe('AlphaDelta mobile layout', () => {
     await openFirstPuzzle(page)
   })
 
+  test('word rows are centered under the six-letter row on mobile', async ({ page }) => {
+    const sixLetterCenter = await page.getByTestId('six-letter-row').evaluate(el => {
+      const r = el.getBoundingClientRect()
+      return r.left + r.width / 2
+    })
+    for (const size of [5, 4, 3, 2, 1]) {
+      const center = await page.getByTestId(`word-row-${size}`).evaluate(el => {
+        const r = el.getBoundingClientRect()
+        return r.left + r.width / 2
+      })
+      expect(Math.abs(center - sixLetterCenter)).toBeLessThan(2)
+    }
+  })
+
   test('keyboard rows are centered together on mobile', async ({ page }) => {
     const rowCenters = await page.locator('.keyboard-row').evaluateAll(rows =>
       rows.map(row => {
