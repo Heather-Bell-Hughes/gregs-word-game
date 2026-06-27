@@ -371,6 +371,11 @@ body {
   justify-content: center;
   white-space: nowrap;
   flex-wrap: nowrap;
+  pointer-events: none;
+}
+
+.word-row .word-box {
+  pointer-events: auto;
 }
 
 .word-row:nth-child(1) {
@@ -416,6 +421,9 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .word-box.empty {
