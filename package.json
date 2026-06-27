@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:devices": "playwright test tests/mobile-devices.spec.js"
+    "test:devices": "playwright test tests/mobile-devices.spec.js",
+    "test:production": "playwright test tests/production.spec.js"
   },
   "repository": {
     "type": "git",

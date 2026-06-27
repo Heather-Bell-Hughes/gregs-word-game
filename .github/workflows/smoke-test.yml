@@ -11,10 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Wait for deployment
-        run: sleep 10
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Check if site is accessible
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Wait for GitHub Pages propagation
+        run: sleep 30
+
+      - name: Check site is accessible
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" https://heather-bell-hughes.github.io/gregs-word-game/)
           if [ "$response" != "200" ]; then
@@ -23,24 +35,14 @@ jobs:
           fi
           echo "Site is accessible (HTTP $response)"
 
-      - name: Verify page loads with React
+      - name: Verify SPA fallback exists
         run: |
-          page_content=$(curl -s https://heather-bell-hughes.github.io/gregs-word-game/)
-          if echo "$page_content" | grep -q "root"; then
-            echo "✓ React root element found"
-          else
-            echo "✗ React root element not found"
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://heather-bell-hughes.github.io/gregs-word-game/404.html)
+          if [ "$response" != "200" ]; then
+            echo "404.html returned HTTP $response — puzzle deep links will fail"
             exit 1
           fi
-          if echo "$page_content" | grep -q "type=.*module"; then
-            echo "✓ Module script found"
-          else
-            echo "✗ Module script not found"
-            exit 1
-          fi
+          echo "404.html is present (HTTP $response)"
 
-      - name: Notify if failed
-        if: failure()
-        run: |
-          echo "❌ Smoke test failed!"
-          echo "Check the deployment at: https://github.com/Heather-Bell-Hughes/gregs-word-game/actions"
+      - name: Run production Playwright smoke tests
+        run: npm run test:production
