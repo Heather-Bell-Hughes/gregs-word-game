@@ -302,7 +302,7 @@ body {
 
 .keyboard-row {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   justify-content: center;
 }
 
@@ -318,14 +318,14 @@ body {
   background: #333;
   color: white;
   border: 1px solid #555;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 17px;
   transition: all 0.2s;
   user-select: none;
-  min-width: 40px;
+  min-width: 44px;
   text-align: center;
 }
 
@@ -344,7 +344,7 @@ body {
   background: #ff6b6b;
   color: white;
   font-size: 18px;
-  min-width: 50px;
+  min-width: 56px;
 }
 
 .keyboard-key.delete-key:hover {
