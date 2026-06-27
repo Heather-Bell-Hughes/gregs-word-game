@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react'
-import { puzzles, getAllLettersForPuzzle } from './puzzles'
-import Menu from './components/Menu'
+import { useState, useEffect, useCallback } from 'react'
+import { puzzles } from './puzzles'
 import Game from './components/Game'
+import { parsePuzzleIndexFromPath, navigateToPuzzle } from './routing'
 import './App.css'
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('game') // 'menu' or 'game'
-  const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0)
+  const [puzzleIndex, setPuzzleIndex] = useState(() =>
+    parsePuzzleIndexFromPath(window.location.pathname, puzzles.length)
+  )
   const [stats, setStats] = useState(() => {
     const saved = localStorage.getItem('wordGameStats')
     const savedStats = saved ? JSON.parse(saved) : []
 
-    // Ensure we have an entry for each puzzle
     return puzzles.map((_, i) =>
       savedStats[i] || {
         id: i,
-        status: 'unsolved', // 'solved', 'gaveup', 'unsolved'
+        status: 'unsolved',
         attempts: 0,
         solved: false
       }
@@ -26,33 +26,32 @@ export default function App() {
     localStorage.setItem('wordGameStats', JSON.stringify(stats))
   }, [stats])
 
-  const handlePuzzleSelect = (index) => {
-    setCurrentPuzzleIndex(index)
-    setCurrentView('game')
-  }
+  useEffect(() => {
+    const onPopState = () => {
+      setPuzzleIndex(parsePuzzleIndexFromPath(window.location.pathname, puzzles.length))
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
 
-  const handleBackToMenu = () => {
-    setCurrentView('menu')
-  }
+  const goToPuzzle = useCallback((index) => {
+    const clamped = Math.min(Math.max(index, 0), puzzles.length - 1)
+    navigateToPuzzle(clamped)
+    setPuzzleIndex(clamped)
+  }, [])
 
   const handleNextPuzzle = () => {
-    const nextIndex = currentPuzzleIndex + 1
-    if (nextIndex < puzzles.length) {
-      setCurrentPuzzleIndex(nextIndex)
-    } else {
-      // If at last puzzle, go back to menu
-      setCurrentView('menu')
-    }
+    goToPuzzle((puzzleIndex + 1) % puzzles.length)
   }
 
   const handlePuzzleSolved = () => {
     setStats(prev => {
       const newStats = [...prev]
-      newStats[currentPuzzleIndex] = {
-        ...newStats[currentPuzzleIndex],
+      newStats[puzzleIndex] = {
+        ...newStats[puzzleIndex],
         status: 'solved',
         solved: true,
-        attempts: (newStats[currentPuzzleIndex].attempts || 0) + 1
+        attempts: (newStats[puzzleIndex].attempts || 0) + 1
       }
       return newStats
     })
@@ -61,39 +60,24 @@ export default function App() {
   const handlePuzzleGaveUp = () => {
     setStats(prev => {
       const newStats = [...prev]
-      newStats[currentPuzzleIndex] = {
-        ...newStats[currentPuzzleIndex],
+      newStats[puzzleIndex] = {
+        ...newStats[puzzleIndex],
         status: 'gaveup',
-        attempts: (newStats[currentPuzzleIndex].attempts || 0) + 1
+        attempts: (newStats[puzzleIndex].attempts || 0) + 1
       }
       return newStats
     })
   }
 
-  const getSolvedCount = () => stats.filter(s => s.solved).length
-  const getGaveUpCount = () => stats.filter(s => s.status === 'gaveup').length
-
   return (
-    <>
-      {currentView === 'menu' ? (
-        <Menu
-          puzzles={puzzles}
-          stats={stats}
-          onSelectPuzzle={handlePuzzleSelect}
-          solvedCount={getSolvedCount()}
-          gaveUpCount={getGaveUpCount()}
-        />
-      ) : (
-        <Game
-          puzzle={puzzles[currentPuzzleIndex]}
-          puzzleIndex={currentPuzzleIndex}
-          onBack={handleBackToMenu}
-          onSolved={handlePuzzleSolved}
-          onGaveUp={handlePuzzleGaveUp}
-          onNextPuzzle={handleNextPuzzle}
-          totalPuzzles={puzzles.length}
-        />
-      )}
-    </>
+    <Game
+      key={puzzleIndex}
+      puzzle={puzzles[puzzleIndex]}
+      puzzleIndex={puzzleIndex}
+      onSolved={handlePuzzleSolved}
+      onGaveUp={handlePuzzleGaveUp}
+      onNextPuzzle={handleNextPuzzle}
+      totalPuzzles={puzzles.length}
+    />
   )
 }
