@@ -1,14 +1,12 @@
-// Dictionary from SCOWL 50 (cleaned/common words)
-// Contains 101,947 valid English words
-// Includes GLOCK and FRACK as added by Greg
+// Everyday English word list (SCOWL-50 filtered)
+// See WORDLIST.md for generation details
 
-import dictionaryText from './dictionary.txt?raw'
+import dictionaryText from '../wordlist.txt?raw'
 
 let _dictionary = null
 
 export function getDictionary() {
   if (!_dictionary) {
-    // Create a Set of all words for fast O(1) lookup
     _dictionary = new Set(
       dictionaryText
         .split('\n')
