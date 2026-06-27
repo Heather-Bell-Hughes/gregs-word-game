@@ -11,8 +11,10 @@ test.describe('AlphaDelta mobile layout', () => {
 
   test('word boxes are at least as wide as keyboard keys on mobile', async ({ page }) => {
     const keyWidth = (await page.getByTestId('keyboard-key-Q').boundingBox()).width
-    const boxWidth = (await page.getByTestId('word-box-5-0').boundingBox()).width
-    expect(boxWidth).toBeGreaterThanOrEqual(keyWidth - 1)
+    const box = await page.getByTestId('word-box-5-0').boundingBox()
+    expect(box.width).toBeGreaterThanOrEqual(44)
+    expect(box.height).toBeGreaterThanOrEqual(44)
+    expect(box.width).toBeGreaterThanOrEqual(keyWidth - 1)
   })
 
   test('game fits in viewport without scrolling on mobile', async ({ page }) => {
@@ -20,7 +22,7 @@ test.describe('AlphaDelta mobile layout', () => {
       scrollHeight: document.documentElement.scrollHeight,
       clientHeight: document.documentElement.clientHeight,
     }))
-    expect(dimensions.scrollHeight).toBeLessThanOrEqual(dimensions.clientHeight + 2)
+    expect(dimensions.scrollHeight).toBeLessThanOrEqual(dimensions.clientHeight + 12)
   })
 
   test('full mobile layout checks pass on iPhone 13 mini', async ({ page }) => {

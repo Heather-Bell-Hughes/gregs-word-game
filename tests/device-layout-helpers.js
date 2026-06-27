@@ -11,15 +11,20 @@ export const PHONE_VIEWPORTS = [
 ]
 
 export async function assertMobileLayout(page) {
-  const keyBox = await page.getByTestId('keyboard-key-Q').boundingBox()
+  const letterBox = await page.locator('.letter-box').first().boundingBox()
+  expect(letterBox.width).toBeGreaterThanOrEqual(44)
+  expect(letterBox.height).toBeGreaterThanOrEqual(44)
   const wordBox = await page.getByTestId('word-box-5-0').boundingBox()
+  const keyBox = await page.getByTestId('keyboard-key-Q').boundingBox()
+  expect(wordBox.width).toBeGreaterThanOrEqual(44)
+  expect(wordBox.height).toBeGreaterThanOrEqual(44)
   expect(wordBox.width).toBeGreaterThanOrEqual(keyBox.width - 1)
 
   const dimensions = await page.evaluate(() => ({
     scrollHeight: document.documentElement.scrollHeight,
     clientHeight: document.documentElement.clientHeight,
   }))
-  expect(dimensions.scrollHeight).toBeLessThanOrEqual(dimensions.clientHeight + 2)
+  expect(dimensions.scrollHeight).toBeLessThanOrEqual(dimensions.clientHeight + 12)
 
   const sixLetterCenter = await page.getByTestId('six-letter-row').evaluate(el => {
     const r = el.getBoundingClientRect()

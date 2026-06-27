@@ -299,6 +299,7 @@ body {
   font-weight: bold;
   font-size: 20px;
   color: #4caf50;
+  flex-shrink: 0;
 }
 
 .keyboard-container {
@@ -550,7 +551,7 @@ body {
   }
 
   .header {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .level-title {
@@ -575,14 +576,12 @@ body {
     width: 100%;
     max-width: none;
     padding: 0 2px;
-    container-type: size;
+    justify-content: center;
     --word-box-gap: 6px;
-    --word-row-gap: clamp(4px, 1vh, 10px);
+    --word-row-gap: 4px;
     gap: var(--word-row-gap);
-    --word-box-size: min(
-      calc((100cqw - 5 * var(--word-box-gap)) / 6),
-      calc((100cqh - 5 * var(--word-row-gap)) / 6)
-    );
+    /* vw-based sizing so the calc always resolves on mobile browsers */
+    --word-box-size: clamp(44px, calc((100vw - 24px - 5 * var(--word-box-gap)) / 6), 58px);
   }
 
   .letter-box {
@@ -607,7 +606,7 @@ body {
 
   .keyboard-key {
     width: var(--keyboard-key-width);
-    height: 48px;
+    height: 44px;
     font-size: clamp(14px, calc(var(--keyboard-key-width) * 0.44), 18px);
   }
 
@@ -624,7 +623,7 @@ body {
 
   .buttons-row {
     gap: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .btn {
