@@ -97,27 +97,24 @@ export default function Game({ puzzle, puzzleIndex, onBack, onSolved, onGaveUp, 
     const word = wordsRef.current[wordSize]
 
     if (boxIndex !== null && boxIndex < word.length) {
-      // Delete the specific selected box
-      const paddedWord = word.padEnd(boxIndex + 1, '_')
-      const newWord = paddedWord.slice(0, boxIndex) + '_' + paddedWord.slice(boxIndex + 1)
+      // Delete the letter at the selected box and shift everything back
+      const newWord = word.slice(0, boxIndex) + word.slice(boxIndex + 1)
       setWords(prev => ({
         ...prev,
-        [wordSize]: newWord.replace(/_+$/, '') // Remove trailing underscores
+        [wordSize]: newWord
       }))
+      // Move selection back to the position of the deleted letter (or previous if at end)
+      if (boxIndex > 0) {
+        setSelectedBoxIndex(boxIndex - 1)
+      } else {
+        setSelectedBoxIndex(null)
+      }
     } else if (word.length > 0) {
       // If no specific box selected, delete from end
       setWords(prev => ({
         ...prev,
         [wordSize]: word.slice(0, -1)
       }))
-    }
-
-    // Move selection backwards
-    if (boxIndex !== null && boxIndex > 0) {
-      setSelectedBoxIndex(boxIndex - 1)
-    } else if (boxIndex === 0) {
-      // If at position 0, clear the selection
-      setSelectedBoxIndex(null)
     }
 
     // Clear marking for current word when deleting
