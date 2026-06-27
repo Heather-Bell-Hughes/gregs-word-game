@@ -30,7 +30,7 @@ jobs:
 
       - name: Wait for GitHub Pages propagation
         run: |
-          SITE="https://heather-bell-hughes.github.io/gregs-word-game"
+          SITE="https://heather-bell-hughes.github.io/AlphaDelta"
           for i in $(seq 1 18); do
             code=$(curl -s -o /tmp/page.html -w "%{http_code}" "$SITE/")
             fallback=$(curl -s -o /dev/null -w "%{http_code}" "$SITE/404.html")

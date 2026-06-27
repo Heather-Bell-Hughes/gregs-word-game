@@ -22,19 +22,19 @@ test.describe('routing helpers', () => {
   })
 
   test('parsePuzzleIndexFromPath strips GitHub Pages base path', () => {
-    expect(parsePuzzleIndexFromPath('/gregs-word-game/3', count, '/gregs-word-game/')).toBe(2)
-    expect(parsePuzzleIndexFromPath('/gregs-word-game/', count, '/gregs-word-game/')).toBe(getTodaysPuzzleIndex(count))
+    expect(parsePuzzleIndexFromPath('/AlphaDelta/3', count, '/AlphaDelta/')).toBe(2)
+    expect(parsePuzzleIndexFromPath('/AlphaDelta/', count, '/AlphaDelta/')).toBe(getTodaysPuzzleIndex(count))
   })
 
   test('isMenuPath detects /menu with and without base path', () => {
     expect(isMenuPath('/menu')).toBe(true)
     expect(isMenuPath('/menu/')).toBe(true)
-    expect(isMenuPath('/gregs-word-game/menu', '/gregs-word-game/')).toBe(true)
+    expect(isMenuPath('/AlphaDelta/menu', '/AlphaDelta/')).toBe(true)
     expect(isMenuPath('/1')).toBe(false)
     expect(isMenuPath('/')).toBe(false)
   })
 
   test('menuPath includes GitHub Pages base path', () => {
-    expect(menuPath('/gregs-word-game/')).toBe('/gregs-word-game/menu')
+    expect(menuPath('/AlphaDelta/')).toBe('/AlphaDelta/menu')
   })
 })

@@ -22,5 +22,5 @@ export default defineConfig({
       },
     },
   ],
-  base: process.env.NODE_ENV === 'production' ? '/gregs-word-game/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/AlphaDelta/' : '/',
 })

@@ -1,5 +1,5 @@
 {
-  "name": "gregs-word-game",
+  "name": "alphadelta",
   "version": "1.0.0",
   "description": "A fun word puzzle game where you find all the words using limited letters!",
   "main": "index.js",
@@ -14,16 +14,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Heather-Bell-Hughes/gregs-word-game.git"
+    "url": "git+https://github.com/Heather-Bell-Hughes/AlphaDelta.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/Heather-Bell-Hughes/gregs-word-game/issues"
+    "url": "https://github.com/Heather-Bell-Hughes/AlphaDelta/issues"
   },
-  "homepage": "https://github.com/Heather-Bell-Hughes/gregs-word-game#readme",
+  "homepage": "https://heather-bell-hughes.github.io/AlphaDelta/",
   "dependencies": {
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

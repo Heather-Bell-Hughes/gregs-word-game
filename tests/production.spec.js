@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test'
 import { assertMobileLayout, PHONE_VIEWPORTS } from './device-layout-helpers.js'
 import { mkdirSync } from 'node:fs'
 
-const PRODUCTION_ORIGIN = 'https://heather-bell-hughes.github.io/gregs-word-game'
+const PRODUCTION_ORIGIN = 'https://heather-bell-hughes.github.io/AlphaDelta'
 
 /** Absolute URL — avoids Playwright baseURL quirks with leading slashes. */
 function prodUrl(path = '') {
