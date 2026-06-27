@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle DAG Viewer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .dag-view {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .level {
+            margin-bottom: 30px;
+        }
+        .level-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .nodes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .node {
+            padding: 12px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .node:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .node.selected {
+            background: #764ba2;
+            color: white;
+            border-color: #764ba2;
+        }
+        .children {
+            margin-left: 20px;
+            padding-left: 20px;
+            border-left: 3px solid #ddd;
+        }
+        .child-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        .stats {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+        .stat-item {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Puzzle DAG Browser</h1>
+
+        <div class="dag-view">
+            <div class="level">
+                <div class="level-title">1-Letter (Root Nodes)</div>
+                <div class="nodes" id="level1"></div>
+            </div>
+
+            <div class="level">
+                <div class="level-title">2-Letter Words</div>
+                <div id="level2"></div>
+            </div>
+
+            <div class="level">
+                <div class="level-title">3-Letter Words</div>
+                <div id="level3"></div>
+            </div>
+
+            <div class="stats" id="stats"></div>
+        </div>
+    </div>
+
+    <script>
+        let dagData = null;
+        let selectedRoot = null;
+        let selected2Letter = null;
+
+        async function loadDAG() {
+            try {
+                const response = await fetch('../puzzle-dag.json');
+                dagData = await response.json();
+                render();
+            } catch (error) {
+                document.querySelector('.dag-view').innerHTML = `<p>Error loading DAG: ${error.message}</p>`;
+            }
+        }
+
+        function render() {
+            renderLevel1();
+            renderStats();
+        }
+
+        function renderLevel1() {
+            const level1 = document.getElementById('level1');
+            level1.innerHTML = '';
+
+            Object.keys(dagData).forEach(root => {
+                const node = document.createElement('div');
+                node.className = 'node' + (selectedRoot === root ? ' selected' : '');
+                node.textContent = root;
+                node.onclick = () => selectRoot(root);
+                level1.appendChild(node);
+            });
+        }
+
+        function selectRoot(root) {
+            selectedRoot = root;
+            selected2Letter = null;
+            renderLevel1();
+            renderLevel2();
+            renderLevel3();
+        }
+
+        function renderLevel2() {
+            const level2 = document.getElementById('level2');
+
+            if (!selectedRoot) {
+                level2.innerHTML = '<p style="color: #999;">Select a 1-letter word</p>';
+                return;
+            }
+
+            const twoLetterWords = dagData[selectedRoot];
+            level2.innerHTML = '';
+
+            const nodes = document.createElement('div');
+            nodes.className = 'nodes';
+
+            Object.keys(twoLetterWords).forEach(word => {
+                const node = document.createElement('div');
+                node.className = 'node' + (selected2Letter === word ? ' selected' : '');
+                node.textContent = word;
+                node.onclick = () => select2Letter(word);
+                nodes.appendChild(node);
+            });
+
+            level2.appendChild(nodes);
+        }
+
+        function select2Letter(word) {
+            selected2Letter = word;
+            renderLevel2();
+            renderLevel3();
+        }
+
+        function renderLevel3() {
+            const level3 = document.getElementById('level3');
+
+            if (!selectedRoot || !selected2Letter) {
+                level3.innerHTML = '<p style="color: #999;">Select a 2-letter word</p>';
+                return;
+            }
+
+            const threeLetterWords = dagData[selectedRoot][selected2Letter];
+            level3.innerHTML = '';
+
+            const nodes = document.createElement('div');
+            nodes.className = 'nodes';
+
+            threeLetterWords.forEach(word => {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.textContent = word;
+                nodes.appendChild(node);
+            });
+
+            level3.appendChild(nodes);
+        }
+
+        function renderStats() {
+            const stats = document.getElementById('stats');
+            let html = '<div class="stat-item"><strong>DAG Statistics:</strong></div>';
+
+            let totalTwoLetter = 0;
+            let totalThreeLetter = 0;
+            let maxThreePerTwo = 0;
+
+            Object.values(dagData).forEach(root => {
+                totalTwoLetter += Object.keys(root).length;
+                Object.values(root).forEach(threeLetterArray => {
+                    totalThreeLetter += threeLetterArray.length;
+                    maxThreePerTwo = Math.max(maxThreePerTwo, threeLetterArray.length);
+                });
+            });
+
+            html += `<div class="stat-item">• 1-letter roots: ${Object.keys(dagData).length}</div>`;
+            html += `<div class="stat-item">• Total 2-letter nodes: ${totalTwoLetter}</div>`;
+            html += `<div class="stat-item">• Total 3-letter connections: ${totalThreeLetter}</div>`;
+            html += `<div class="stat-item">• Max 3-letter words per 2-letter: ${maxThreePerTwo}</div>`;
+
+            if (selectedRoot && selected2Letter) {
+                const threeCount = dagData[selectedRoot][selected2Letter].length;
+                html += `<div class="stat-item" style="margin-top: 10px; color: #667eea;"><strong>Selected Path: ${selectedRoot} → ${selected2Letter} → ${threeCount} options</strong></div>`;
+            }
+
+            stats.innerHTML = html;
+        }
+
+        loadDAG();
+    </script>
+</body>
+</html>
