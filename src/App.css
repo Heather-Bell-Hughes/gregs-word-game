@@ -318,14 +318,14 @@ body {
   background: #333;
   color: white;
   border: 1px solid #555;
-  padding: 14px 16px;
+  padding: 10px 22px;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 17px;
+  font-size: 16px;
   transition: all 0.2s;
   user-select: none;
-  min-width: 44px;
+  min-width: 48px;
   text-align: center;
 }
 
@@ -343,8 +343,8 @@ body {
 .keyboard-key.delete-key {
   background: #ff6b6b;
   color: white;
-  font-size: 18px;
-  min-width: 56px;
+  font-size: 16px;
+  min-width: 60px;
 }
 
 .keyboard-key.delete-key:hover {
