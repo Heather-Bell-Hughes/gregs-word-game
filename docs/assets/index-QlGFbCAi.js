@@ -1228,7 +1228,6 @@ blench
 blend
 blends
 bless
-bletch
 blew
 blight
 blimp
@@ -1780,7 +1779,6 @@ bytes
 byway
 byways
 byword
-ca
 cab
 cabal
 cabals
@@ -1830,7 +1828,6 @@ cake
 caked
 cakes
 caking
-cal
 calf
 calico
 caliph
@@ -2115,7 +2112,6 @@ cheese
 cheesy
 chef
 chefs
-chem
 cherry
 cherub
 chess
@@ -2316,7 +2312,6 @@ clinks
 clip
 clips
 clique
-clit
 clits
 cloak
 cloaks
@@ -2793,7 +2788,6 @@ cruder
 cruel
 cruet
 cruets
-cruft
 crufts
 crufty
 cruise
@@ -3372,7 +3366,6 @@ divvy
 dizzy
 do
 doable
-doc
 docent
 docile
 dock
@@ -4004,7 +3997,6 @@ escape
 eschew
 escort
 escrow
-esp
 espied
 espies
 espy
@@ -5069,7 +5061,6 @@ gelled
 gels
 gem
 gems
-gen
 gender
 gene
 genera
@@ -5332,7 +5323,6 @@ gourd
 gourds
 gout
 gouty
-gov
 govern
 govt
 gown
@@ -5883,7 +5873,6 @@ him
 hind
 hinder
 hinds
-hing
 hinge
 hinged
 hinges
@@ -6281,7 +6270,6 @@ incing
 incise
 incite
 income
-incs
 incur
 incurs
 ind
@@ -6935,7 +6923,6 @@ last
 lasted
 lastly
 lasts
-lat
 latch
 late
 lately
@@ -7113,7 +7100,6 @@ liable
 liaise
 liar
 liars
-lib
 libel
 libels
 libido
@@ -7707,7 +7693,6 @@ meats
 meaty
 mecca
 meccas
-med
 medal
 medals
 meddle
@@ -7718,14 +7703,11 @@ medic
 medics
 medium
 medley
-meds
 meek
 meeker
 meekly
 meet
 meets
-meg
-megs
 meh
 meld
 melded
@@ -7837,7 +7819,6 @@ mike
 miked
 mikes
 miking
-mil
 milch
 mild
 milder
@@ -7866,7 +7847,6 @@ mimic
 mimics
 miming
 mimosa
-min
 mince
 minced
 minces
@@ -9558,7 +9538,6 @@ prep
 prepay
 preppy
 preps
-pres
 preset
 press
 presto
@@ -10944,7 +10923,6 @@ seat
 seated
 seats
 seaway
-sec
 secede
 second
 secret
@@ -13770,7 +13748,6 @@ vol
 vole
 voles
 volley
-vols
 volt
 volts
 volume
