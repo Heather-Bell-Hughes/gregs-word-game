@@ -707,7 +707,6 @@ bled
 blench
 blend
 blends
-bletch
 blew
 blight
 blimp
@@ -1076,7 +1075,6 @@ byline
 byte
 bytes
 byword
-ca
 cab
 cabin
 cabins
@@ -1108,7 +1106,6 @@ cake
 caked
 cakes
 caking
-cal
 calf
 caliph
 calk
@@ -1293,7 +1290,6 @@ cheat
 cheats
 chef
 chefs
-chem
 cherub
 chest
 chew
@@ -1434,7 +1430,6 @@ clinks
 clip
 clips
 clique
-clit
 clits
 cloak
 cloaks
@@ -1757,7 +1752,6 @@ crude
 cruel
 cruet
 cruets
-cruft
 crufts
 crufty
 cruise
@@ -2101,7 +2095,6 @@ divot
 divots
 do
 doable
-doc
 docent
 docile
 dock
@@ -2439,7 +2432,6 @@ erupt
 erupts
 escort
 escrow
-esp
 espy
 est
 eta
@@ -3143,7 +3135,6 @@ gelid
 gels
 gem
 gems
-gen
 genial
 genius
 gens
@@ -3309,7 +3300,6 @@ gourd
 gourds
 gout
 gouty
-gov
 govern
 govt
 gown
@@ -3684,7 +3674,6 @@ him
 hind
 hinder
 hinds
-hing
 hinge
 hinged
 hinges
@@ -3945,7 +3934,6 @@ inch
 inched
 inches
 income
-incs
 incur
 incurs
 ind
@@ -4356,7 +4344,6 @@ lashed
 lasing
 last
 lasted
-lat
 latch
 late
 later
@@ -4450,7 +4437,6 @@ levy
 lewd
 liar
 liars
-lib
 lice
 lichen
 lick
@@ -4849,7 +4835,6 @@ measly
 meat
 meats
 meaty
-med
 medal
 medals
 media
@@ -4857,9 +4842,6 @@ medial
 median
 medic
 medics
-meds
-meg
-megs
 meh
 meld
 melds
@@ -4916,7 +4898,6 @@ mighty
 mike
 miked
 mikes
-mil
 milch
 mild
 milder
@@ -4931,7 +4912,6 @@ milked
 milks
 milky
 mils
-min
 mince
 minced
 minces
@@ -6018,7 +5998,6 @@ preach
 precis
 prefab
 prefix
-pres
 presto
 prey
 preys
@@ -6793,7 +6772,6 @@ seamy
 sear
 search
 seat
-sec
 second
 sect
 sector
@@ -8354,7 +8332,6 @@ voile
 vol
 vole
 voles
-vols
 volt
 volts
 volume
