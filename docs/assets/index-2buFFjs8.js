@@ -11610,7 +11610,6 @@ coroner
 coroners
 coronet
 coronets
-corp
 corpora
 corporal
 corporals
@@ -14252,7 +14251,6 @@ deprogram
 deprogrammed
 deprogramming
 deprograms
-dept
 depth
 depths
 deputation
@@ -16367,7 +16365,6 @@ dowse
 dowsed
 dowses
 dowsing
-dox
 doxed
 doxes
 doxing
@@ -16376,14 +16373,12 @@ doxologies
 doxology
 doyen
 doyens
-doz
 doze
 dozed
 dozen
 dozens
 dozes
 dozing
-dpi
 drab
 drabber
 drabbest
@@ -18575,7 +18570,6 @@ estrogens
 estuaries
 estuary
 eta
-etc
 etch
 etched
 etcher
@@ -21988,7 +21982,6 @@ fryer
 fryers
 frying
 ftpers
-ftping
 fuchsia
 fuchsias
 fuck
@@ -22037,7 +22030,6 @@ fulminating
 fulmination
 fulminations
 fulsome
-fum
 fumble
 fumbled
 fumbler
@@ -22055,7 +22047,6 @@ fumigation
 fumigator
 fumigators
 fuming
-fums
 fun
 function
 functional
@@ -24175,10 +24166,8 @@ gynecological
 gynecologist
 gynecologists
 gynecology
-gyp
 gypped
 gypping
-gyps
 gypsies
 gypsum
 gypsy
@@ -25506,7 +25495,6 @@ hobnobs
 hobo
 hobos
 hobs
-hoc
 hock
 hocked
 hockey
@@ -27126,7 +27114,6 @@ inbreed
 inbreeding
 inbreeds
 inbuilt
-inc
 incalculable
 incalculably
 incandescence
@@ -28244,7 +28231,6 @@ insurrection
 insurrectionist
 insurrectionists
 insurrections
-int
 intact
 intaglio
 intaglios
@@ -29611,6 +29597,7 @@ keepsakes
 keg
 kegs
 kelp
+kempt
 ken
 kenned
 kennel
@@ -33709,7 +33696,6 @@ misbehaved
 misbehaves
 misbehaving
 misbehavior
-misc
 miscalculate
 miscalculated
 miscalculates
@@ -60783,7 +60769,6 @@ wizardly
 wizardry
 wizards
 wizened
-wkly
 wobble
 wobbled
 wobbles
@@ -61190,7 +61175,6 @@ xenophobia
 xenophobic
 xerographic
 xerography
-xor
 xref
 xrefs
 xterm
@@ -61356,7 +61340,6 @@ yowl
 yowled
 yowling
 yowls
-yrs
 yttrium
 yucca
 yuccas
