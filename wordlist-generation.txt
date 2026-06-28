@@ -2462,7 +2462,6 @@ exalt
 exalts
 exam
 exams
-excl
 exhort
 exist
 exit
@@ -3006,7 +3005,6 @@ frumpy
 fry
 frying
 ftpers
-fuck
 fucked
 fucker
 fucks
@@ -4928,7 +4926,6 @@ miler
 milers
 miles
 milf
-milfs
 milk
 milked
 milks
@@ -5214,7 +5211,6 @@ nebula
 neck
 necks
 nectar
-neg
 neigh
 neighs
 nerd
@@ -5261,7 +5257,6 @@ nips
 nit
 niter
 nits
-nix
 nixed
 nixes
 no
@@ -6158,7 +6153,6 @@ put
 putrid
 puts
 putsch
-pwned
 pylon
 pylons
 pyre
@@ -8064,7 +8058,6 @@ twine
 twined
 twines
 twinge
-twink
 twinks
 twins
 twirl
@@ -8788,9 +8781,6 @@ wroth
 wrung
 wry
 wryest
-xref
-xrefs
-xterm
 xylem
 yacht
 yachts

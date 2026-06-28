@@ -4067,7 +4067,6 @@ except
 excess
 excise
 excite
-excl
 excuse
 exec
 execs
@@ -4834,7 +4833,6 @@ fryer
 fryers
 frying
 ftpers
-fuck
 fucked
 fucker
 fucks
@@ -7842,7 +7840,6 @@ miler
 milers
 miles
 milf
-milfs
 milieu
 milk
 milked
@@ -8290,7 +8287,6 @@ needed
 needle
 needs
 needy
-neg
 negate
 neigh
 neighs
@@ -8383,7 +8379,6 @@ nit
 niter
 nits
 nitwit
-nix
 nixed
 nixes
 nixing
@@ -9773,7 +9768,6 @@ putter
 putts
 putty
 puzzle
-pwned
 pwning
 pygmy
 pylon
@@ -13315,7 +13309,6 @@ twine
 twined
 twines
 twinge
-twink
 twinks
 twins
 twirl
@@ -14366,9 +14359,6 @@ wryly
 wuss
 wusses
 xenon
-xref
-xrefs
-xterm
 xylem
 yacht
 yachts
