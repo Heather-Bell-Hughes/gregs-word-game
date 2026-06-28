@@ -2934,7 +2934,6 @@ cornmeal
 corns
 cornstalk
 corny
-corp
 corps
 corpse
 corpulent
@@ -3652,7 +3651,6 @@ depot
 depots
 depraving
 depravity
-dept
 depth
 depths
 deputing
@@ -4014,19 +4012,16 @@ dowries
 dowry
 dowse
 dowsing
-dox
 doxes
 doxing
 doxings
 doyen
 doyens
-doz
 doze
 dozen
 dozens
 dozes
 dozing
-dpi
 drab
 drably
 drabs
@@ -4460,7 +4455,6 @@ espying
 est
 estuary
 eta
-etc
 etch
 etching
 etchings
@@ -5453,7 +5447,6 @@ frumpy
 fry
 frying
 ftpers
-ftping
 fuchsia
 fuck
 fucked
@@ -5470,7 +5463,6 @@ fulminate
 fulminated
 fulminates
 fulsome
-fum
 fumble
 fumbled
 fumbler
@@ -5486,7 +5478,6 @@ fumigates
 fumigator
 fumigators
 fuming
-fums
 fun
 fund
 funds
@@ -6167,8 +6158,6 @@ gym
 gymnast
 gymnastic
 gyms
-gyp
-gyps
 gypsum
 gyrate
 gyrated
@@ -6606,7 +6595,6 @@ hobnail
 hobnailed
 hobnails
 hobs
-hoc
 hock
 hocked
 hockey
@@ -7040,7 +7028,6 @@ inboards
 inbox
 inboxes
 inbred
-inc
 inced
 incest
 inch
@@ -7166,7 +7153,6 @@ insult
 insulted
 insure
 insured
-int
 intake
 intakes
 integral
@@ -7499,6 +7485,7 @@ kaput
 keg
 kegs
 kelp
+kempt
 ken
 kens
 kept
@@ -8762,7 +8749,6 @@ mirth
 mirthful
 misanthrope
 misanthropy
-misc
 miscount
 miscounted
 miscreant
@@ -15440,7 +15426,6 @@ wives
 wizard
 wizardly
 wizards
-wkly
 woe
 woeful
 woes
@@ -15588,7 +15573,6 @@ wrought
 wrung
 wry
 wryest
-xor
 xref
 xrefs
 xterm
@@ -15688,7 +15672,6 @@ yowl
 yowled
 yowling
 yowls
-yrs
 yuck
 yuckier
 yuckiest

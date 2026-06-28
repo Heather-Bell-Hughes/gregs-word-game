@@ -12,3 +12,6 @@ qa-screenshots/
 .swp
 todo
 design.png
+
+# Full unfiltered trees — too large to publish, kept locally for reference
+tree-data/
