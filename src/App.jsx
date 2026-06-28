@@ -2,9 +2,11 @@ import { useState, useEffect, useCallback } from 'react'
 import { puzzles } from './puzzles'
 import Menu from './components/Menu'
 import Game from './components/Game'
+import PuzzleTreeViewer from './components/PuzzleTreeViewer'
 import {
   parsePuzzleIndexFromPath,
   isMenuPath,
+  isTreePath,
   navigateToPuzzle,
 } from './routing'
 import './App.css'
@@ -12,6 +14,9 @@ import './App.css'
 export default function App() {
   const [showMenu, setShowMenu] = useState(() =>
     isMenuPath(window.location.pathname)
+  )
+  const [showTree, setShowTree] = useState(() =>
+    isTreePath(window.location.pathname)
   )
   const [puzzleIndex, setPuzzleIndex] = useState(() =>
     parsePuzzleIndexFromPath(window.location.pathname, puzzles.length)
@@ -37,6 +42,7 @@ export default function App() {
   useEffect(() => {
     const onPopState = () => {
       setShowMenu(isMenuPath(window.location.pathname))
+      setShowTree(isTreePath(window.location.pathname))
       setPuzzleIndex(parsePuzzleIndexFromPath(window.location.pathname, puzzles.length))
     }
     window.addEventListener('popstate', onPopState)
@@ -81,6 +87,10 @@ export default function App() {
 
   const solvedCount = stats.filter(s => s.solved).length
   const gaveUpCount = stats.filter(s => s.status === 'gaveup').length
+
+  if (showTree) {
+    return <PuzzleTreeViewer />
+  }
 
   if (showMenu) {
     return (

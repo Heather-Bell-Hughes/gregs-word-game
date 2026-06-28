@@ -1,0 +1,403 @@
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 30px);
+  color: #333;
+}
+
+.title {
+  color: #333;
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #999;
+  margin: 0 0 16px;
+}
+
+.error { color: red; }
+
+/* ── Toolbar ─────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.viewToggle {
+  display: flex;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.toggleActive {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 7px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.toggleInactive {
+  background: #f5f5f5;
+  color: #555;
+  border: none;
+  padding: 7px 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.toggleInactive:hover { background: #e0e0e0; }
+.toolbarCount { font-weight: normal; }
+
+/* ── Main panel ──────────────────────────────────── */
+.dagView {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  color: #333;
+}
+
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* ── Bottom bar ──────────────────────────────────── */
+.bottomBar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  color: #666;
+}
+.bottomSpacer { flex: 1; }
+.legendDot  { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legendText { font-size: 12px; color: #666; }
+.legendSep  { display: inline-block; width: 1px; height: 12px; background: #ddd; margin: 0 4px; }
+
+/* ── Path stack ──────────────────────────────────── */
+.pathStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.pathWord {
+  background: #667eea;
+  color: white;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 7px 20px;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 1px;
+  min-width: 80px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pathWord:hover { background: #764ba2; }
+
+.pathWordFinal {
+  background: #4caf50;
+  border-color: #2e7d32;
+  border-style: dashed;
+}
+.pathWordFinal:hover { background: #388e3c; }
+
+/* ── Path complete ───────────────────────────────── */
+.pathComplete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 20px;
+  text-align: center;
+}
+.pathCompleteTitle { font-size: 18px; font-weight: bold; color: #333; }
+.pathCompleteNum   { font-size: 14px; color: #667eea; font-weight: bold; }
+.pathCompleteSub   { font-size: 13px; color: #888; }
+
+/* ── Level header ────────────────────────────────── */
+.levelHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+.levelLabel   { font-size: 15px; color: #667eea; font-weight: 700; }
+.loadingLabel { font-size: 12px; color: #aaa; }
+
+/* ── Bottom nav (Back + Reset) ───────────────────── */
+.bottomNav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.resetBtn {
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+}
+.resetBtn:hover { background: #e0e0e0; }
+
+/* ── Level title ─────────────────────────────────── */
+.levelTitle {
+  font-size: 17px;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #667eea;
+}
+
+/* ── Word grid (list view) ───────────────────────── */
+.nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.node {
+  padding: 10px 8px 6px;
+  background: #f5f5f5;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  transition: all 0.2s;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.nodeUnpuzzled { border-color: #66bb6a; background: #f1faf1; color: #2e7d32; }
+.nodePuzzled   { border-color: #bdbdbd; background: #f9f9f9; color: #777; }
+
+.node:hover { background: #5c6bc0; color: white; border-color: #5c6bc0; transform: translateY(-2px); }
+
+.terminalNode { border-style: dashed; }
+
+/* ── Depth badge ─────────────────────────────────── */
+.depthBadge {
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  background: #66bb6a;
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+
+/* ── Back + Stats ────────────────────────────────── */
+.backButton {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+}
+.backButton:hover { background: #764ba2; }
+
+.stats {
+  display: flex;
+  gap: 24px;
+  background: #f0f4ff;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #444;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+/* ── TREE VIEW ───────────────────────────────────── */
+.treeViewport {
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+/* Root ul — lays out the top-level nodes in a row */
+.treeRoot {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  gap: 0;
+}
+
+/* Each li in ANY level of the tree */
+.treeItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 8px;
+}
+
+/* Vertical line going UP from each li to the horizontal connector bar */
+.treeItem::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 20px;
+  background: #ccc;
+}
+
+/* Horizontal connector bar spanning siblings */
+.treeItem::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ccc;
+}
+
+/* First child: bar only on right half */
+.treeItem:first-child::after { left: 50%; }
+/* Last child: bar only on left half */
+.treeItem:last-child::after  { right: 50%; }
+/* Only child: no bar, no vertical connector (parent line draws directly) */
+.treeItem:only-child::before,
+.treeItem:only-child::after  { display: none; }
+
+/* Top-level nodes (direct children of treeRoot) have no connector lines */
+.treeRoot > .treeItem::before,
+.treeRoot > .treeItem::after { display: none; }
+
+/* Children ul — lays out children in a row below their parent */
+.treeChildren {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0 0 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+}
+
+/* Vertical line from parent node box down to the horizontal bar */
+.treeChildren::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 20px;
+  background: #ccc;
+}
+
+/* Node box */
+.treeNodeBox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  background: #f5f5f5;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  font-size: 13px;
+  white-space: nowrap;
+  user-select: none;
+  transition: all 0.15s;
+  position: relative;
+  z-index: 1;
+}
+
+.treeNodeBox:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.treeExpandedBox {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.treeTerminalBox {
+  border-style: dashed;
+  border-color: #81c784;
+  background: #f1faf1;
+  cursor: default;
+  opacity: 0.7;
+}
+
+.treeTerminalBox:hover {
+  background: #f1faf1;
+  color: #333;
+  border-color: #81c784;
+}
+
+.treeWord {
+  letter-spacing: 0.5px;
+}
+
+/* ── Puzzle badge ─────────────────────────────────── */
+.puzzleBadge {
+  font-size: 10px;
+  background: #667eea;
+  color: white;
+  padding: 1px 5px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* ── Tree viewport (react-d3-tree) ───────────────── */
+.treeViewport {
+  width: 100%;
+  height: 75vh;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}

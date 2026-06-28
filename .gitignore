@@ -15,3 +15,5 @@ design.png
 
 # Full unfiltered trees — too large to publish, kept locally for reference
 tree-data/
+public/reverse-tree/
+public/tree-test.json

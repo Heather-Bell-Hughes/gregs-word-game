@@ -66,3 +66,18 @@ export function navigateToPuzzle(index) {
 export function navigateToMenu() {
   window.history.pushState({ view: 'menu' }, '', menuPath())
 }
+
+/** True when the URL is the puzzle tree viewer at `/tree`. */
+export function isTreePath(pathname, baseUrl = getBaseUrl()) {
+  const path = stripBasePath(pathname, baseUrl)
+  return path === '/tree' || path === '/tree/'
+}
+
+export function treePath(baseUrl = getBaseUrl()) {
+  const base = baseUrl.replace(/\/$/, '')
+  return `${base}/tree`.replace(/([^:]\/)\/+/g, '$1')
+}
+
+export function navigateToTree() {
+  window.history.pushState({ view: 'tree' }, '', treePath())
+}
