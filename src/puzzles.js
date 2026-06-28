@@ -898,6 +898,15 @@ export const puzzles = [
     "twoLetters": "GO",
     "oneLetter": "A",
     "difficulty": "normal"
+  },
+  {
+    "sixLetter": "WHIRLS",
+    "fiveLetters": "KEMPT",
+    "fourLetters": "FUND",
+    "threeLetters": "COG",
+    "twoLetters": "BY",
+    "oneLetter": "A",
+    "difficulty": "hard"
   }
 ]
 
