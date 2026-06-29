@@ -2,7 +2,7 @@ name: Import Puzzle Submissions
 
 on:
   schedule:
-    - cron: '0 * * * *'   # every hour
+    - cron: '*/5 * * * *'  # every 5 minutes
   workflow_dispatch:        # also triggerable manually from GitHub Actions tab
 
 permissions:
