@@ -1,1 +1,1 @@
-{"maxDepth":6,"children":{"A":{"maxDepth":5,"hasUnpuzzled":true},"I":{"maxDepth":5,"hasUnpuzzled":true}},"hasUnpuzzled":true}
+{"maxDepth":6,"children":{"A":{"maxDepth":5,"hasUnpuzzled":true,"childCount":32},"I":{"maxDepth":5,"hasUnpuzzled":true,"childCount":37}},"hasUnpuzzled":true,"childCount":2}
