@@ -34,11 +34,29 @@ function nodeAt(tree, path) {
   return cur
 }
 
+const FORM_SUBMIT = 'https://docs.google.com/forms/d/e/1FAIpQLScZGMw_adTq13FTOR21Tx46wy4LPZczpzsxQYoXhSNP3FRpAA/formResponse'
+const FORM_FIELDS = {
+  6: 'entry.286261207',
+  5: 'entry.48461877',
+  4: 'entry.1189278412',
+  3: 'entry.215585409',
+  2: 'entry.973779032',
+  1: 'entry.1514953076',
+}
+
+async function submitPuzzle(path) {
+  const body = new URLSearchParams()
+  path.forEach(word => body.append(FORM_FIELDS[word.length], word))
+  await fetch(FORM_SUBMIT, { method: 'POST', mode: 'no-cors', body })
+}
+
 export default function PuzzleTreeViewer() {
   const [tree, setTree]               = useState(null)
   const [navPath, setNavPath]         = useState([])
   const [loading, setLoading]         = useState(true)
   const [fetchError, setFetchError]   = useState(null)
+  const [confirm, setConfirm]         = useState(false)
+  const [submitted, setSubmitted]     = useState(false)
 
   useEffect(() => {
     fetchNodeData([])
@@ -48,6 +66,8 @@ export default function PuzzleTreeViewer() {
 
   async function navigateTo(word, terminal = false) {
     const newPath = [...navPath, word]
+    setConfirm(false)
+    setSubmitted(false)
     if (terminal) { setNavPath(newPath); return }
 
     const node = nodeAt(tree, newPath)
@@ -110,10 +130,36 @@ export default function PuzzleTreeViewer() {
 
           {navPath.length === 6 ? (
             <div className={styles.pathComplete}>
-              {puzzleMap.get(navPath[5])
-                ? <><div className={styles.pathCompleteTitle}>Already a puzzle</div><div className={styles.pathCompleteNum}>Puzzle #{puzzleMap.get(navPath[5])}</div></>
-                : <><div className={styles.pathCompleteTitle}>New puzzle candidate</div><div className={styles.pathCompleteSub}>This path has no puzzle yet</div></>
-              }
+              {puzzleMap.get(navPath[5]) ? (
+                <>
+                  <div className={styles.pathCompleteTitle}>Already a puzzle</div>
+                  <div className={styles.pathCompleteNum}>Puzzle #{puzzleMap.get(navPath[5])}</div>
+                </>
+              ) : submitted ? (
+                <>
+                  <div className={styles.pathCompleteTitle}>Submitted!</div>
+                  <div className={styles.pathCompleteSub}>It'll become Puzzle #{puzzles.length + 1} within the hour</div>
+                </>
+              ) : confirm ? (
+                <>
+                  <div className={styles.pathCompleteTitle}>Add this puzzle?</div>
+                  <div className={styles.pathCompleteSub}>{navPath.join(' → ')}</div>
+                  <div className={styles.confirmButtons}>
+                    <button className={styles.confirmYes} onClick={async () => {
+                      await submitPuzzle(navPath)
+                      setConfirm(false)
+                      setSubmitted(true)
+                    }}>Yes, add it</button>
+                    <button className={styles.confirmNo} onClick={() => setConfirm(false)}>Cancel</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.pathCompleteTitle}>New puzzle candidate</div>
+                  <div className={styles.pathCompleteSub}>{navPath.join(' → ')}</div>
+                  <button className={styles.addPuzzleBtn} onClick={() => setConfirm(true)}>Add Puzzle</button>
+                </>
+              )}
             </div>
           ) : (
             <div className={styles.nodes}>

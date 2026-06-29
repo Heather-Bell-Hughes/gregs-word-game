@@ -142,7 +142,48 @@
 }
 .pathCompleteTitle { font-size: 18px; font-weight: bold; color: #333; }
 .pathCompleteNum   { font-size: 14px; color: #667eea; font-weight: bold; }
-.pathCompleteSub   { font-size: 13px; color: #888; }
+.pathCompleteSub   { font-size: 13px; color: #888; margin-bottom: 16px; }
+
+.addPuzzleBtn {
+  margin-top: 4px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.addPuzzleBtn:hover { background: #388e3c; }
+
+.confirmButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.confirmYes {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.confirmYes:hover { background: #388e3c; }
+.confirmNo {
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.confirmNo:hover { background: #e0e0e0; }
 
 /* ── Level header ────────────────────────────────── */
 .levelHeader {

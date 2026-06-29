@@ -1,0 +1,31 @@
+name: Import Puzzle Submissions
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # every hour
+  workflow_dispatch:        # also triggerable manually from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Import new puzzles from Google Sheet
+        run: node scripts/import-puzzles.js
+
+      - name: Commit and push if puzzles changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/puzzles.js
+          git diff --staged --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "Add new puzzle submissions from form"
+          git push
