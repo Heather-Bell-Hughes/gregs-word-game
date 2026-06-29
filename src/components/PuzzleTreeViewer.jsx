@@ -57,6 +57,7 @@ export default function PuzzleTreeViewer() {
   const [fetchError, setFetchError]   = useState(null)
   const [confirm, setConfirm]         = useState(false)
   const [submitted, setSubmitted]     = useState(false)
+  const [sessionCount, setSessionCount] = useState(0)
 
   useEffect(() => {
     fetchNodeData([])
@@ -138,7 +139,7 @@ export default function PuzzleTreeViewer() {
               ) : submitted ? (
                 <>
                   <div className={styles.pathCompleteTitle}>Submitted!</div>
-                  <div className={styles.pathCompleteSub}>It'll be live within the hour</div>
+                  <div className={styles.pathCompleteSub}>It'll be Puzzle #{puzzles.length + sessionCount} — live within the hour</div>
                 </>
               ) : confirm ? (
                 <>
@@ -147,6 +148,7 @@ export default function PuzzleTreeViewer() {
                   <div className={styles.confirmButtons}>
                     <button className={styles.confirmYes} onClick={async () => {
                       await submitPuzzle(navPath)
+                      setSessionCount(c => c + 1)
                       setConfirm(false)
                       setSubmitted(true)
                     }}>Yes, add it</button>
