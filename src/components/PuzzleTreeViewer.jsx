@@ -156,11 +156,13 @@ export default function PuzzleTreeViewer() {
                 <>
                   <div className={styles.pathCompleteTitle}>Already queued</div>
                   <div className={styles.pathCompleteSub}>This puzzle has been submitted and will be added on the next import run</div>
+                  <a className={styles.sheetLink} href="https://docs.google.com/spreadsheets/d/1gPJKU-mlP6L_JljXvJFwxGOXSmJOpklTblGG1jfTq08/edit?gid=1881712769" target="_blank" rel="noreferrer">View queue</a>
                 </>
               ) : submitted ? (
                 <>
                   <div className={styles.pathCompleteTitle}>Submitted!</div>
                   <div className={styles.pathCompleteSub}>It'll be Puzzle #{puzzles.length + sessionCount} — live on the next import run</div>
+                  <a className={styles.sheetLink} href="https://docs.google.com/spreadsheets/d/1gPJKU-mlP6L_JljXvJFwxGOXSmJOpklTblGG1jfTq08/edit?gid=1881712769" target="_blank" rel="noreferrer">View queue</a>
                 </>
               ) : confirm ? (
                 <>
