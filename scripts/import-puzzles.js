@@ -3,8 +3,8 @@
 
 import fs from 'fs'
 
-const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/1gPJKU-mlP6L_JljXvJFwxGOXSmJOpklTblGG1jfTq08/export?format=csv&gid=1881712769'
-const PUZZLES_FILE = 'src/puzzles.js'
+const SHEET_CSV   = 'https://docs.google.com/spreadsheets/d/1gPJKU-mlP6L_JljXvJFwxGOXSmJOpklTblGG1jfTq08/export?format=csv&gid=1881712769'
+const PUZZLES_JSON = 'src/puzzles.json'
 
 // Fetch CSV following redirects
 const res = await fetch(SHEET_CSV)
@@ -14,7 +14,6 @@ const csv = await res.text()
 // Parse CSV rows (skip header)
 const rows = csv.trim().split('\n').slice(1)
   .map(line => {
-    // Handle quoted fields
     const fields = []
     let cur = '', inQuote = false
     for (const ch of line) {
@@ -41,11 +40,9 @@ if (rows.length === 0) {
   process.exit(0)
 }
 
-// Read existing puzzles
-const existing = fs.readFileSync(PUZZLES_FILE, 'utf-8')
-const existingSix = new Set(
-  [...existing.matchAll(/"sixLetter":\s*"([^"]+)"/g)].map(m => m[1])
-)
+// Read existing puzzles JSON
+const puzzles = JSON.parse(fs.readFileSync(PUZZLES_JSON, 'utf-8'))
+const existingSix = new Set(puzzles.map(p => p.sixLetter))
 
 const toAdd = rows.filter(p => !existingSix.has(p.sixLetter))
 
@@ -54,9 +51,7 @@ if (toAdd.length === 0) {
   process.exit(0)
 }
 
-// Append before the closing ]
-const newEntries = toAdd.map(p => `  ${JSON.stringify(p, null, 2).replace(/\n/g, '\n  ')}`).join(',\n')
-const updated = existing.replace(/\s*\]\s*$/, `,\n${newEntries}\n]`)
-fs.writeFileSync(PUZZLES_FILE, updated)
+puzzles.push(...toAdd)
+fs.writeFileSync(PUZZLES_JSON, JSON.stringify(puzzles, null, 2))
 
 console.log(`Added ${toAdd.length} new puzzle(s): ${toAdd.map(p => p.sixLetter).join(', ')}`)
