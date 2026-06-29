@@ -44,10 +44,12 @@ const FORM_FIELDS = {
   2: 'entry.973779032',
   1: 'entry.1514953076',
 }
+const FORM_HARD = 'entry.2024642100'
 
-async function submitPuzzle(path) {
+async function submitPuzzle(path, isHard) {
   const body = new URLSearchParams()
   path.forEach(word => body.append(FORM_FIELDS[word.length], word))
+  if (isHard) body.append(FORM_HARD, 'Hard')
   await fetch(FORM_SUBMIT, { method: 'POST', mode: 'no-cors', body })
 }
 
@@ -59,6 +61,7 @@ export default function PuzzleTreeViewer() {
   const [confirm, setConfirm]         = useState(false)
   const [submitted, setSubmitted]     = useState(false)
   const [sessionCount, setSessionCount] = useState(0)
+  const [isHard, setIsHard]           = useState(false)
   const [queuedWords, setQueuedWords] = useState(null) // null = not yet fetched
 
   useEffect(() => {
@@ -174,15 +177,20 @@ export default function PuzzleTreeViewer() {
                 <>
                   <div className={styles.pathCompleteTitle}>Add this puzzle?</div>
                   <div className={styles.pathCompleteSub}>{navPath.join(' → ')}</div>
+                  <label className={styles.hardToggle}>
+                    <input type="checkbox" checked={isHard} onChange={e => setIsHard(e.target.checked)} />
+                    Mark as hard
+                  </label>
                   <div className={styles.confirmButtons}>
                     <button className={styles.confirmYes} onClick={async () => {
-                      await submitPuzzle(navPath)
-                      window.gtag?.('event', 'puzzle_submitted', { puzzle_word: navPath[5] })
+                      await submitPuzzle(navPath, isHard)
+                      window.gtag?.('event', 'puzzle_submitted', { puzzle_word: navPath[5], difficulty: isHard ? 'hard' : 'normal' })
                       setSessionCount(c => c + 1)
                       setConfirm(false)
                       setSubmitted(true)
+                      setIsHard(false)
                     }}>Yes, add it</button>
-                    <button className={styles.confirmNo} onClick={() => setConfirm(false)}>Cancel</button>
+                    <button className={styles.confirmNo} onClick={() => { setConfirm(false); setIsHard(false) }}>Cancel</button>
                   </div>
                 </>
               ) : (

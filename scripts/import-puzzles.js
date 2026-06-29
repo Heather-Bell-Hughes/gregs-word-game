@@ -25,14 +25,14 @@ const rows = csv.trim().split('\n').slice(1)
     return fields
   })
   .filter(f => f.length >= 7 && f[1] && f[2] && f[3] && f[4] && f[5] && f[6])
-  .map(([, six, five, four, three, two, one]) => ({
+  .map(([, six, five, four, three, two, one, hard]) => ({
     sixLetter:    six.toUpperCase().trim(),
     fiveLetters:  five.toUpperCase().trim(),
     fourLetters:  four.toUpperCase().trim(),
     threeLetters: three.toUpperCase().trim(),
     twoLetters:   two.toUpperCase().trim(),
     oneLetter:    one.toUpperCase().trim(),
-    difficulty:   'normal',
+    difficulty:   hard?.trim() ? 'hard' : 'normal',
   }))
 
 if (rows.length === 0) {
