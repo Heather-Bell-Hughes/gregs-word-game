@@ -171,6 +171,7 @@ export default function PuzzleTreeViewer() {
                   <div className={styles.confirmButtons}>
                     <button className={styles.confirmYes} onClick={async () => {
                       await submitPuzzle(navPath)
+                      window.gtag?.('event', 'puzzle_submitted', { puzzle_word: navPath[5] })
                       setSessionCount(c => c + 1)
                       setConfirm(false)
                       setSubmitted(true)

@@ -285,6 +285,7 @@ export default function Game({ puzzle, puzzleIndex, onSolved, onGaveUp, onNextPu
     if (allComplete && allValid && !puzzleSolved && !showSolution) {
       setPuzzleSolved(true)
       setMessage('🎉 Congratulations, Well Done!')
+      window.gtag?.('event', 'puzzle_solved', { puzzle_index: puzzleIndex, puzzle_word: puzzle.sixLetter })
       onSolved()
     }
   }, [words, puzzleSolved, showSolution, onSolved])
@@ -303,6 +304,7 @@ export default function Game({ puzzle, puzzleIndex, onSolved, onGaveUp, onNextPu
       marking[size] = Array(size).fill('correct')
     }
     setLetterMarking(marking)
+    window.gtag?.('event', 'puzzle_gave_up', { puzzle_index: puzzleIndex, puzzle_word: puzzle.sixLetter })
     onGaveUp()
   }
 
