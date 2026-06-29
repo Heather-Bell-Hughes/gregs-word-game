@@ -49,11 +49,22 @@ export default function App() {
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
 
+  useEffect(() => {
+    if (showTree) {
+      window.gtag?.('event', 'page_view', { page_title: 'Puzzle Tree', page_path: '/tree' })
+    } else if (showMenu) {
+      window.gtag?.('event', 'page_view', { page_title: 'Menu', page_path: '/menu' })
+    } else {
+      window.gtag?.('event', 'page_view', { page_title: `Puzzle #${puzzleIndex + 1}`, page_path: `/puzzle/${puzzleIndex + 1}` })
+    }
+  }, [showTree, showMenu, puzzleIndex])
+
   const goToPuzzle = useCallback((index) => {
     const clamped = Math.min(Math.max(index, 0), puzzles.length - 1)
     navigateToPuzzle(clamped)
     setShowMenu(false)
     setPuzzleIndex(clamped)
+    window.gtag?.('event', 'puzzle_selected', { puzzle_index: clamped + 1, puzzle_word: puzzles[clamped].sixLetter })
   }, [])
 
   const handleNextPuzzle = () => {

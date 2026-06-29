@@ -68,6 +68,12 @@ export default function PuzzleTreeViewer() {
   }, [])
 
   useEffect(() => {
+    if (navPath.length === 6) {
+      window.gtag?.('event', 'tree_path_completed', { puzzle_word: navPath[5], already_puzzle: !!puzzleMap.get(navPath[5]) })
+    }
+  }, [navPath])
+
+  useEffect(() => {
     fetch(SHEET_CSV)
       .then(r => r.text())
       .then(csv => {
