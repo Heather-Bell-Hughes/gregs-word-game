@@ -925,4 +925,14 @@ export function getAllLettersForPuzzle(puzzle) {
 // 6L+ start words found in the tree that don't have puzzles yet.
 // Run: node scripts/find-puzzle-candidates.js  (after building the tree)
 // to regenerate this list.
-export const puzzleCandidates = []
+export const puzzleCandidates = [,
+  {
+    "sixLetter": "WRINGS",
+    "fiveLetters": "LYMPH",
+    "fourLetters": "FUTZ",
+    "threeLetters": "COD",
+    "twoLetters": "BE",
+    "oneLetter": "A",
+    "difficulty": "normal"
+  }
+]
