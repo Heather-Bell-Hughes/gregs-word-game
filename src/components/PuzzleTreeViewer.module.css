@@ -265,7 +265,7 @@
 }
 
 .nodeUnpuzzled { border-color: #66bb6a; background: #f1faf1; color: #2e7d32; }
-.nodePuzzled   { border-color: #bdbdbd; background: #f9f9f9; color: #777; }
+.nodePuzzled   { border-color: #ffb347; background: #fff8f0; color: #b36a00; }
 
 .node:hover { background: #5c6bc0; color: white; border-color: #5c6bc0; transform: translateY(-2px); }
 
