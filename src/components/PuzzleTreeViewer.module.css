@@ -157,6 +157,17 @@
 }
 .sheetLink:hover { text-decoration: underline; }
 
+.nearDupWarning {
+  font-size: 12px;
+  color: #b36a00;
+  background: #fff8f0;
+  border: 1px solid #ffb347;
+  border-radius: 6px;
+  padding: 8px 12px;
+  max-width: 320px;
+  text-align: center;
+}
+
 .addPuzzleBtn {
   margin-top: 4px;
   background: #4caf50;

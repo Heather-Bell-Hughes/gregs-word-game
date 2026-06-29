@@ -34,6 +34,18 @@ function nodeAt(tree, path) {
   return cur
 }
 
+function findNearDuplicate(navPath) {
+  const stripS = w => w.endsWith('S') ? w.slice(0, -1) : w
+  const [one, two, three, four, five, six] = navPath
+  const newRoots = new Set([stripS(five), stripS(six)])
+  return puzzles.find((p, i) => {
+    if (p.oneLetter !== one || p.twoLetters !== two || p.threeLetters !== three || p.fourLetters !== four) return false
+    if (p.sixLetter === six) return false // exact match handled elsewhere
+    const existing = new Set([stripS(p.fiveLetters), stripS(p.sixLetter)])
+    return newRoots.size === existing.size && [...newRoots].every(r => existing.has(r))
+  })
+}
+
 const SHEET_CSV   = 'https://docs.google.com/spreadsheets/d/1gPJKU-mlP6L_JljXvJFwxGOXSmJOpklTblGG1jfTq08/export?format=csv&gid=1881712769'
 const FORM_SUBMIT = 'https://docs.google.com/forms/d/e/1FAIpQLScZGMw_adTq13FTOR21Tx46wy4LPZczpzsxQYoXhSNP3FRpAA/formResponse'
 const FORM_FIELDS = {
@@ -197,6 +209,16 @@ export default function PuzzleTreeViewer() {
                 <>
                   <div className={styles.pathCompleteTitle}>New puzzle candidate</div>
                   <div className={styles.pathCompleteSub}>{navPath.join(' → ')}</div>
+                  {(() => {
+                    const dup = findNearDuplicate(navPath)
+                    if (!dup) return null
+                    const dupNum = puzzleMap.get(dup.sixLetter)
+                    return (
+                      <div className={styles.nearDupWarning}>
+                        ⚠ Similar to Puzzle #{dupNum} — same puzzle with {dup.sixLetter}/{dup.fiveLetters} swapped to {navPath[5]}/{navPath[4]}
+                      </div>
+                    )
+                  })()}
                   <button className={styles.addPuzzleBtn} onClick={() => setConfirm(true)}>Add Puzzle</button>
                 </>
               )}
