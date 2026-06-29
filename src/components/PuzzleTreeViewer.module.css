@@ -258,6 +258,14 @@
 
 .terminalNode { border-style: dashed; }
 
+/* ── Child count ─────────────────────────────────── */
+.childCount {
+  font-size: 11px;
+  font-weight: bold;
+  color: #999;
+  line-height: 1;
+}
+
 /* ── Depth badge ─────────────────────────────────── */
 .depthBadge {
   font-size: 10px;

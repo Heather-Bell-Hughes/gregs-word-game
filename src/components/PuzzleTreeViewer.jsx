@@ -177,6 +177,9 @@ export default function PuzzleTreeViewer() {
                   >
                     <span>{word}</span>
                     {isTerminal && <div className={styles.depthBadge}>end</div>}
+                    {!isTerminal && child.childCount !== undefined && (
+                      <div className={styles.childCount}>{child.childCount}</div>
+                    )}
                     {puzzleNum && <div className={styles.puzzleBadge}>Puzzle #{puzzleNum}</div>}
                   </div>
                 )
