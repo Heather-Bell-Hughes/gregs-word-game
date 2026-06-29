@@ -139,7 +139,7 @@ export default function PuzzleTreeViewer() {
               ) : submitted ? (
                 <>
                   <div className={styles.pathCompleteTitle}>Submitted!</div>
-                  <div className={styles.pathCompleteSub}>It'll be Puzzle #{puzzles.length + sessionCount} — live within a few hours</div>
+                  <div className={styles.pathCompleteSub}>It'll be Puzzle #{puzzles.length + sessionCount}</div>
                 </>
               ) : confirm ? (
                 <>
