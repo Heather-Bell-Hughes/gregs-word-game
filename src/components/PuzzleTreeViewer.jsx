@@ -34,6 +34,7 @@ function nodeAt(tree, path) {
   return cur
 }
 
+const SHEET_CSV   = 'https://docs.google.com/spreadsheets/d/1gPJKU-mlP6L_JljXvJFwxGOXSmJOpklTblGG1jfTq08/export?format=csv&gid=1881712769'
 const FORM_SUBMIT = 'https://docs.google.com/forms/d/e/1FAIpQLScZGMw_adTq13FTOR21Tx46wy4LPZczpzsxQYoXhSNP3FRpAA/formResponse'
 const FORM_FIELDS = {
   6: 'entry.286261207',
@@ -58,11 +59,26 @@ export default function PuzzleTreeViewer() {
   const [confirm, setConfirm]         = useState(false)
   const [submitted, setSubmitted]     = useState(false)
   const [sessionCount, setSessionCount] = useState(0)
+  const [queuedWords, setQueuedWords] = useState(null) // null = not yet fetched
 
   useEffect(() => {
     fetchNodeData([])
       .then(data => { setTree(data); setLoading(false) })
       .catch(err  => { setFetchError(err.message); setLoading(false) })
+  }, [])
+
+  useEffect(() => {
+    fetch(SHEET_CSV)
+      .then(r => r.text())
+      .then(csv => {
+        const words = new Set(
+          csv.trim().split('\n').slice(1)
+            .map(line => line.split(',')[1]?.replace(/"/g, '').trim().toUpperCase())
+            .filter(Boolean)
+        )
+        setQueuedWords(words)
+      })
+      .catch(() => setQueuedWords(new Set())) // CORS blocked — degrade silently
   }, [])
 
   async function navigateTo(word, terminal = false) {
@@ -135,6 +151,11 @@ export default function PuzzleTreeViewer() {
                 <>
                   <div className={styles.pathCompleteTitle}>Already a puzzle</div>
                   <div className={styles.pathCompleteNum}>Puzzle #{puzzleMap.get(navPath[5])}</div>
+                </>
+              ) : queuedWords?.has(navPath[5]) ? (
+                <>
+                  <div className={styles.pathCompleteTitle}>Already queued</div>
+                  <div className={styles.pathCompleteSub}>This puzzle has been submitted and will be added on the next import run</div>
                 </>
               ) : submitted ? (
                 <>
