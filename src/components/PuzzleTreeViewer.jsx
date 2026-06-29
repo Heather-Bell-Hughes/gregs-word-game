@@ -119,7 +119,7 @@ export default function PuzzleTreeViewer() {
       <div className={styles.dagView}>
         <div className={styles.scrollArea}>
           <h1 className={styles.title}>Puzzle Tree</h1>
-          <p className={styles.subtitle}>Build a new puzzle from the bottom up</p>
+          <p className={styles.subtitle}>Build a new puzzle from the bottom up and submit it to be added to the game. See open submissions <a className={styles.subtitleLink} href="https://docs.google.com/spreadsheets/d/1gPJKU-mlP6L_JljXvJFwxGOXSmJOpklTblGG1jfTq08/edit?gid=1881712769" target="_blank" rel="noreferrer">here</a>.</p>
           {navPath.length > 0 && (
             <div className={styles.pathStack}>
               {[...navPath].reverse().map((word, i) => {

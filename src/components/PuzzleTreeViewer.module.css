@@ -144,6 +144,12 @@
 .pathCompleteNum   { font-size: 14px; color: #667eea; font-weight: bold; }
 .pathCompleteSub   { font-size: 13px; color: #888; margin-bottom: 16px; }
 
+.subtitleLink {
+  color: #667eea;
+  text-decoration: none;
+}
+.subtitleLink:hover { text-decoration: underline; }
+
 .sheetLink {
   font-size: 12px;
   color: #667eea;
